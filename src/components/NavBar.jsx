@@ -1,3 +1,4 @@
+import React from "react";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
@@ -24,13 +25,12 @@ function NavBar() {
             <Nav.Link href="#" className="mx-2">
               Menù
             </Nav.Link>
-
             <NavDropdown
               title="Prenota"
               id="nav-dropdown"
               className="mx-2 bg-warning custom-dropdown"
             >
-              <NavDropdown.Item href="#" className=" bg-warning text-center">
+              <NavDropdown.Item href="#" className="bg-warning text-center">
                 Tavolo
               </NavDropdown.Item>
               <NavDropdown.Item href="#" className="bg-warning text-center">
@@ -46,13 +46,10 @@ function NavBar() {
             <Nav.Link href="#" className="mx-2">
               Contatti
             </Nav.Link>
-
+          </Nav>
+          <Nav className="ms-auto mt-auto mx-2">
             <Nav.Link as={Link} to="/login" className="mx-2">
               Accedi
-            </Nav.Link>
-
-            <Nav.Link as={Link} to="/register" className="mx-2">
-              Registrati
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>

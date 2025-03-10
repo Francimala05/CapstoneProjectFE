@@ -1,7 +1,8 @@
+import React from "react";
 function HomePage() {
   return (
     <div>
-      <h1>Sito in manutenzione....</h1>
+      <h1 className="text-warning mt-5">Sito in manutenzione....</h1>
     </div>
   );
 }

@@ -1,6 +1,9 @@
+import React from "react";
+
 import { useState } from "react";
 import { Form, Button, Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import logo from "../assets/LogoPizzaPazzaGiallo.jpg";
 
 function Register() {
   const [nome, setNome] = useState("");
@@ -24,7 +27,7 @@ function Register() {
     const newUser = { nome, cognome, username, email, password };
 
     // Invio della richiesta al back-end per la registrazione
-    fetch("http://localhost:8080/utente/insert", {
+    fetch("http://localhost:8085/utente/insert", {
       // URL del tuo back-end per la registrazione
       method: "POST",
       headers: {
@@ -49,74 +52,74 @@ function Register() {
 
   return (
     <Container>
-      <h2 className="my-4 text-center">Registrazione</h2>
+      <img src={logo} alt="Logo" style={{ height: "250px" }} />
+      <h1 className="my-4 text-center text-warning">Registrati</h1>
       <Form onSubmit={handleRegister}>
         <Form.Group controlId="formNome">
-          <Form.Label>Nome</Form.Label>
           <Form.Control
             type="text"
             placeholder="Inserisci il tuo nome"
             value={nome}
             onChange={(e) => setNome(e.target.value)}
+            className="mt-4"
           />
         </Form.Group>
 
         <Form.Group controlId="formCognome">
-          <Form.Label>Cognome</Form.Label>
           <Form.Control
             type="text"
             placeholder="Inserisci il tuo cognome"
             value={cognome}
             onChange={(e) => setCognome(e.target.value)}
+            className="mt-4"
           />
         </Form.Group>
 
         <Form.Group controlId="formUsername">
-          <Form.Label>Username</Form.Label>
           <Form.Control
             type="text"
             placeholder="Inserisci il tuo username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            className="mt-4"
           />
         </Form.Group>
 
         <Form.Group controlId="formEmail">
-          <Form.Label>Email</Form.Label>
           <Form.Control
             type="email"
             placeholder="Inserisci la tua email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            className="mt-4"
           />
         </Form.Group>
 
         <Form.Group controlId="formPassword">
-          <Form.Label>Password</Form.Label>
           <Form.Control
             type="password"
             placeholder="Inserisci la tua password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className="mt-4"
           />
         </Form.Group>
 
         <Form.Group controlId="formConfirmPassword">
-          <Form.Label>Conferma Password</Form.Label>
           <Form.Control
             type="password"
             placeholder="Conferma la tua password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
+            className="mt-4"
           />
         </Form.Group>
 
-        <Button variant="primary" type="submit" className="mt-3">
-          Registrati
+        <Button variant="success" type="submit" className="mt-4">
+          Continua
         </Button>
       </Form>
     </Container>
   );
 }
-
 export default Register;

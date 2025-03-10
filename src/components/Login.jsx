@@ -1,7 +1,8 @@
+import React from "react";
 import { useState } from "react";
 import { Form, Button, Container } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
+import logo from "../assets/LogoPizzaPazzaGiallo.jpg";
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -12,7 +13,7 @@ function Login() {
 
     const loginRequest = { username, password };
 
-    fetch("http://localhost:8080/utente/login", {
+    fetch("http://localhost:8085/utente/login", {
       // URL del tuo back-end per il login
       method: "POST",
       headers: {
@@ -39,10 +40,10 @@ function Login() {
 
   return (
     <Container>
-      <h2 className="my-4 text-center">Login</h2>
+      <img src={logo} alt="Logo" style={{ height: "250px" }} />
+      <h1 className="my-4 text-warning">Accedi</h1>
       <Form onSubmit={handleLogin}>
         <Form.Group controlId="formUsername">
-          <Form.Label>Username</Form.Label>
           <Form.Control
             type="text"
             placeholder="Inserisci il tuo username"
@@ -52,19 +53,25 @@ function Login() {
         </Form.Group>
 
         <Form.Group controlId="formPassword">
-          <Form.Label>Password</Form.Label>
           <Form.Control
             type="password"
             placeholder="Inserisci la tua password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className="mt-4"
           />
         </Form.Group>
 
-        <Button variant="primary" type="submit" className="mt-3">
-          Accedi
+        <Button variant="success" type="submit" className="mt-4">
+          Continua
         </Button>
       </Form>
+      <p className="mt-5 text-warning">
+        Sei nuovo?{" "}
+        <Link as={Link} to="/register" href="">
+          Registrati qui!
+        </Link>
+      </p>
     </Container>
   );
 }

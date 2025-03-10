@@ -1,3 +1,4 @@
+import React from "react";
 import "./App.css";
 import NavBar from "./components/Navbar";
 import {
@@ -13,17 +14,18 @@ import Register from "./components/Registrazione";
 function App() {
   const location = useLocation();
 
+  const showNavBar =
+    location.pathname !== "/login" && location.pathname !== "/register";
+
   return (
-    <Router>
-      {location.pathname !== "/login" && location.pathname !== "/register" && (
-        <NavBar />
-      )}
+    <>
+      {showNavBar && <NavBar />}
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/" element={<HomePage />} />
       </Routes>
-    </Router>
+    </>
   );
 }
 
