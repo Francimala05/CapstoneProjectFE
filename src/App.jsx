@@ -10,6 +10,7 @@ import {
 import HomePage from "./components/HomePage";
 import Login from "./components/Login";
 import Register from "./components/Registrazione";
+import Menu from "./components/Menu";
 
 function App() {
   const location = useLocation();
@@ -24,6 +25,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/" element={<HomePage />} />
+        <Route path="/menù" element={<Menu />} />
       </Routes>
     </>
   );

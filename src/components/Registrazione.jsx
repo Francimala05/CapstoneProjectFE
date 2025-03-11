@@ -28,15 +28,25 @@ function Register() {
 
     // Invio della richiesta al back-end per la registrazione
     fetch("http://localhost:8085/utente/insert", {
-      // URL del tuo back-end per la registrazione
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Accept: "text/plain",
       },
       body: JSON.stringify(newUser),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        console.log("Risposta dal server:", response);
+        // Se la risposta non è ok, mostra un errore
+        if (!response.ok) {
+          throw new Error(
+            `Errore HTTP: ${response.status} ${response.statusText}`
+          );
+        }
+        return response.text();
+      })
       .then((data) => {
+        console.log("Dati ricevuti dal server:", data);
         if (data === "Utente registrato con successo") {
           alert("Registrazione completata con successo!");
           navigate("/login"); // Reindirizza alla pagina di login dopo la registrazione
@@ -45,8 +55,8 @@ function Register() {
         }
       })
       .catch((error) => {
-        console.error("Errore:", error);
-        alert("Errore durante la registrazione");
+        console.error("Errore durante la registrazione:", error);
+        alert(`Errore durante la registrazione: ${error.message}`);
       });
   };
 

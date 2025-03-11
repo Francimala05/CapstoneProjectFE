@@ -1,8 +1,8 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Form, Button, Container } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/LogoPizzaPazzaGiallo.jpg";
+
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -13,19 +13,30 @@ function Login() {
 
     const loginRequest = { username, password };
 
+    // Iniziamo la richiesta di login
     fetch("http://localhost:8085/utente/login", {
-      // URL del tuo back-end per il login
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(loginRequest),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        // Controlliamo se la risposta è valida
+        if (!response.ok) {
+          throw new Error(
+            `Errore HTTP: ${response.status} ${response.statusText}`
+          );
+        }
+        return response.text(); // Converto la risposta in testo (JWT)
+      })
       .then((data) => {
-        if (data.token) {
-          // Memorizza il token nel localStorage
-          localStorage.setItem("authToken", data.token);
+        // Visualizziamo la risposta per capire cosa contiene
+        console.log("Dati ricevuti dal server:", data);
+
+        if (data) {
+          // Memorizziamo il token nel localStorage
+          localStorage.setItem("authToken", data);
           alert("Login effettuato con successo!");
           navigate("/"); // Reindirizza alla home page dopo il login
         } else {
@@ -33,8 +44,9 @@ function Login() {
         }
       })
       .catch((error) => {
-        console.error("Errore:", error);
-        alert("Errore durante il login");
+        // Gestiamo gli errori
+        console.error("Errore durante il login:", error);
+        alert(`Errore durante il login: ${error.message}`);
       });
   };
 
