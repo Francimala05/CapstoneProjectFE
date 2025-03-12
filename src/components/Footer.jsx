@@ -8,7 +8,7 @@ import {
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   return (
-    <footer className="page-footer blue pt-1 pb-3 text-white">
+    <footer className="page-footer blue pt-1 pb-3 mt-5 text-white">
       <div className="row justify-content-center mt-5">
         <div className=" mb-2">
           <BsFacebook className="footer-icon me-2" />

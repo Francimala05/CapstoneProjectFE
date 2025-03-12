@@ -4,24 +4,39 @@ import Carosello2 from "../assets/Carosello2.jpg";
 import Carosello3 from "../assets/Carosello3.jpg";
 function Carosello() {
   return (
-    <Carousel style={{ maxWidth: "600px", margin: "0 auto" }}>
-      <Carousel.Item interval={1000}>
+    <Carousel style={{ width: "80%", margin: "0 auto" }}>
+      <Carousel.Item>
         <img
-          className="d-block w-75 mx-auto"
+          style={{
+            height: "500px",
+            objectFit: "cover",
+            objectPosition: "center 20%",
+          }}
+          className="d-block w-100"
           src={Carosello1}
           alt="First slide"
         />
       </Carousel.Item>
-      <Carousel.Item interval={500}>
+      <Carousel.Item>
         <img
-          className="d-block w-75 mx-auto"
+          style={{
+            height: "500px",
+            objectFit: "cover",
+            objectPosition: "center 20%",
+          }}
+          className="d-block w-100"
           src={Carosello2}
           alt="Second slide"
         />
       </Carousel.Item>
       <Carousel.Item>
         <img
-          className="d-block w-75 mx-auto"
+          style={{
+            height: "500px",
+            objectFit: "cover",
+            objectPosition: "center 20%",
+          }}
+          className="d-block w-100"
           src={Carosello3}
           alt="Third slide"
         />
