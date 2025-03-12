@@ -6,6 +6,8 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import logo from "../assets/LogoPizzaPazzaGiallo.jpg";
 import { Link } from "react-router-dom";
 import { PersonCircle } from "react-bootstrap-icons";
+import { Button } from "react-bootstrap";
+import "../assets/styles/NavBar.css";
 function NavBar() {
   const isLoggedIn = localStorage.getItem("authToken");
   // const userName = localStorage.getItem("userName");
@@ -26,42 +28,31 @@ function NavBar() {
               Home
             </Nav.Link>
             <Nav.Link as={Link} to="/menù" className="mx-2">
+              Ordina ora!
+            </Nav.Link>
+            <Nav.Link as={Link} to="/menù" className="mx-2">
               Menù
             </Nav.Link>
-            <NavDropdown
-              title="Prenota"
-              id="nav-dropdown"
-              className="mx-2 bg-warning custom-dropdown"
-            >
-              <NavDropdown.Item href="#" className="bg-warning text-center">
-                Tavolo
-              </NavDropdown.Item>
-              <NavDropdown.Item href="#" className="bg-warning text-center">
-                Asporto
-              </NavDropdown.Item>
-              <NavDropdown.Item href="#" className="bg-warning text-center">
-                Domicilio
-              </NavDropdown.Item>
-            </NavDropdown>
+            <Nav.Link as={Link} to="/" className="mx-2">
+              Prenota un tavolo
+            </Nav.Link>
             <Nav.Link href="#" className="mx-2">
               Dicono di noi
             </Nav.Link>
-            <Nav.Link href="#" className="mx-2">
-              Contatti
-            </Nav.Link>
           </Nav>
-          <Nav className="ms-auto mt-auto mx-2">
+          <Nav className="ms-auto mt-auto mx-2 me-lg-5">
             {isLoggedIn ? (
               <NavDropdown
-                title={<PersonCircle size={25} />} // Icona come titolo del dropdown
+                title={<PersonCircle size={25} />}
                 id="nav-dropdown-profile"
-                className="bg-warning text-center"
+                className="text-center nav-dropdown-custom"
               >
                 {/*   <NavDropdown.Item className="text-center">
                   <strong>{userName}</strong>
                 </NavDropdown.Item> */}
                 <NavDropdown.Item
-                  className="text-center text-white bg-danger"
+                  as={Button}
+                  className="text-center bg-danger custom-logout-button"
                   onClick={() => {
                     localStorage.removeItem("authToken");
                     localStorage.removeItem("userName");

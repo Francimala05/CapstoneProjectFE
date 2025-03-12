@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Form, Button, Container } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/LogoPizzaPazzaGiallo.jpg";
+import Carosello from "./CaroselloVerticale";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -35,16 +36,15 @@ function Login() {
         console.log("Dati ricevuti dal server:", data);
 
         if (data) {
-          // Memorizziamo il token nel localStorage
+          // Memorizza il token nel localStorage
           localStorage.setItem("authToken", data);
           alert("Login effettuato con successo!");
-          navigate("/"); // Reindirizza alla home page dopo il login
+          navigate("/"); // Torna alla home page dopo il login
         } else {
           alert("Credenziali non valide!");
         }
       })
       .catch((error) => {
-        // Gestiamo gli errori
         console.error("Errore durante il login:", error);
         alert(`Errore durante il login: ${error.message}`);
       });
@@ -79,7 +79,7 @@ function Login() {
         </Button>
       </Form>
       <p className="mt-5 text-warning">
-        Sei nuovo?{" "}
+        Sei nuovo?
         <Link as={Link} to="/register" href="">
           Registrati qui!
         </Link>

@@ -2,7 +2,7 @@ import React from "react";
 
 import { useState } from "react";
 import { Form, Button, Container } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/LogoPizzaPazzaGiallo.jpg";
 
 function Register() {
@@ -47,11 +47,17 @@ function Register() {
       })
       .then((data) => {
         console.log("Dati ricevuti dal server:", data);
-        if (data === "Utente registrato con successo") {
+        if (data.includes("è stato inserito correttamente nel sistema")) {
           alert("Registrazione completata con successo!");
-          navigate("/login"); // Reindirizza alla pagina di login dopo la registrazione
+          setNome("");
+          setCognome("");
+          setUsername("");
+          setEmail("");
+          setPassword("");
+          setConfirmPassword("");
+          navigate("/");
         } else {
-          alert(data); // Mostra l'errore ricevuto dal back-end
+          alert(data);
         }
       })
       .catch((error) => {
@@ -129,6 +135,12 @@ function Register() {
           Continua
         </Button>
       </Form>
+      <p className="mt-5 text-warning">
+        Sei già registrato?
+        <Link as={Link} to="/login" href="">
+          Accedi qui!
+        </Link>
+      </p>
     </Container>
   );
 }

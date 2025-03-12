@@ -5,5 +5,9 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 8080, 
+    mimeTypes: {
+      'application/javascript': ['js'], 
+    },
   },
+
 });
