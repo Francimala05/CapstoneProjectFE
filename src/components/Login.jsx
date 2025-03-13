@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Form, Button, Container } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/LogoPizzaPazzaGiallo.jpg";
-import Carosello from "./CaroselloVerticale";
 
 function Login() {
   const [username, setUsername] = useState("");
