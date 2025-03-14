@@ -1,3 +1,22 @@
+
+
+
+.home-page h1{
+  display: flex;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 100px;
+  font-weight: bolder;
+  height: 40px;
+  text-align: center;
+ }
+
+ .home-page h4{
+ display: flex;
+ font-family: "Caveat";
+ font-weight: 400;
+ font-size: 50px;
+ }
+
 .home-page {
     display: flex;
     justify-content: center;
@@ -18,8 +37,14 @@
   
   .text-section {
     flex: 1;
-    padding-right: 15px; 
     order: 0;
+  display: flex;
+  align-items: center;
+  margin-bottom: 4rem;
+  font-size: 30px;
+  flex-direction: column;
+  justify-content: space-around ;
+  width: 70%;
   }
   
   .image-section {
@@ -49,16 +74,47 @@
     }
   }
   
-  @media (max-width: 767px) {
-    .content-container {
-      flex-direction:column-reverse; 
-    }
+  @media (max-width: 1100px) {
+
   
+    .content-container{
+      top:auto;
+
+    }
     .text-section {
       padding-right: 0;
       text-align: center; 
       margin-bottom: 20px; 
+      order: 1;
+      margin-bottom: 2rem; 
+    }
+  
+    .image-section {
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      order: 2; 
+    }
+  
+    .animated-image {
+      max-width: 90%; 
+    }
+  }
+  
+  @media (max-width: 991px) {
+    .content-container {
+      flex-direction: column;
+    }
+
+  
+    .text-section {
+      margin-top: 100px;
+      padding-right: 0;
+      text-align: center; 
+      margin-bottom: 20px;
       order: 1; 
+      font-size: 25px;
     }
   
     .image-section {
@@ -67,10 +123,55 @@
       justify-content: center;
       align-items: center;
       order: 2; 
+
     }
   
     .animated-image {
-      max-width: 70%; 
+      max-width: 60%;
+    }
+
+
+    .home-page  h1 {
+      font-size: 60px; 
+    }
+  
+    .home-page  h4 {
+      font-size: 40px; 
+    }
+
+  }
+
+
+  @media (max-width: 767px) {
+    .content-container {
+      flex-direction: column-reverse;  
+    }
+  
+    .text-section {
+      padding-right: 0;
+      text-align: center;
+      margin-bottom: 20px;
+      order: 1;
+      font-size: 20px;
+    }
+
+    .image-section {
+      padding-top: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      order: 2;
+    }
+  
+    .animated-image {
+      max-width: 80%; 
+    }
+  
+    .home-page  h1 {
+      font-size: 60px; 
+    }
+  
+    .home-page  h4 {
+      font-size: 35px; 
     }
   }
-  

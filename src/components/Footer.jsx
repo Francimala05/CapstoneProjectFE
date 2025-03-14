@@ -1,10 +1,4 @@
-import {
-  BsFacebook,
-  BsInstagram,
-  BsTelephone,
-  BsTelephoneMinus,
-  BsWatch,
-} from "react-icons/bs";
+import { BsFacebook, BsInstagram, BsTelephone, BsWatch } from "react-icons/bs";
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   return (
