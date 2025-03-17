@@ -3,11 +3,12 @@ import Carosello1 from "../assets/Carosello1.jpg";
 import Carosello2 from "../assets/Carosello2.jpg";
 import Carosello3 from "../assets/Carosello3.jpg";
 import { useState } from "react";
+import "../assets/styles/Aside.css";
 
 const messages = [
   "la pizza 'Vulcano'",
   "la pizza 'Napoletana'",
-  "il panuozzo 'Capri'",
+  "la pizza 'Al pistacchio'",
 ];
 
 function Carosello({ setDynamicText }) {
@@ -53,9 +54,9 @@ function Carosello({ setDynamicText }) {
             style={{
               height: "500px",
               objectFit: "cover",
-              objectPosition: "center 40%",
+              objectPosition: "center 20%",
             }}
-            className="d-block w-100"
+            className="d-block w-100 img-3"
             src={Carosello3}
             alt="Third slide"
           />

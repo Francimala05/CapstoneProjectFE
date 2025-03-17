@@ -29,7 +29,7 @@ function HomePage() {
         </Container>
       </div>
 
-      <div className="aside mt-5">
+      <div className="aside">
         <div className="aside-sx">
           <Carosello setDynamicText={setDynamicText} />
         </div>

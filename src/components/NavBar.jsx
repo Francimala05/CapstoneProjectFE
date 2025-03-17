@@ -26,7 +26,9 @@ function NavBar() {
             expand="lg"
             className="d-flex justify-content-center justify-content-lg-start custom-navbar-brand"
           >
-            <img src={logo} alt="Logo" style={{ height: "90px" }} />
+            <Link to="/">
+              <img src={logo} alt="Logo" style={{ height: "90px" }} />
+            </Link>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
