@@ -1,0 +1,187 @@
+ h4{
+    display: flex;
+    font-family: "Caveat";
+    font-weight: 500;
+    font-size: 60px;
+    justify-content: center;
+    }
+
+    h5{
+        font-family: 'Montserrat', sans-serif;
+        font-size: 40px;
+        text-align: left;
+        padding-top: 10px;
+        padding-bottom: 20px;
+    }
+    .menu-toggle {
+        font-family: 'Montserrat', sans-serif; 
+        font-size: 40px; 
+        text-align: left;
+        padding-top: 10px;
+        padding-bottom: 20px;
+        font-weight: bold;
+      }
+
+.menu-title {
+    text-align: left;
+    font-size: 70px;
+    margin-bottom: 20px;
+    padding-left: 10px;
+    margin-top: 20px;
+  }
+  
+  .pizza-card, .panuozzo-card {
+    width: 18rem;
+    margin: 10px;
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+  }
+  
+  .pizza-card:hover, .panuozzo-card:hover {
+    transform: scale(1.05);
+  }
+  
+  .pizza-card img, .panuozzo-card img {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    object-fit: cover;
+    height: 200px;
+    width: 100%;
+  }
+  
+  .pizza-title,.panuozzo-title {
+    text-align: left;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+
+  .pizza-ingredients, .panuozzo-ingredients {
+    text-align: left;
+    font-size: 1rem;
+    color: #555;
+  }
+  
+  .pizza-menu, .panuozzo-menu {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+  }
+  
+
+  
+  .pizza-price, .panuozzo-price  {
+    text-align: center;
+    font-size: 1rem;
+    padding: 10px;
+    border: 1px solid #000000;
+    border-radius: 5px; 
+  }
+  
+
+  .pizza-price:not(:last-child), .panuozzo-price:not(:last-child) {
+    margin-right: 5px; 
+  }
+  
+
+  .pizza-card .row, .panuozzo-card .row {
+    margin-bottom: 10px;
+  }
+
+
+.fritti-menu {
+    background-color: white;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .fritti-menu .fritto-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 10px;
+    border-bottom: 1px solid #ddd;
+    font-size: 1.2rem;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .fritti-menu .fritto-row:hover {
+    background-color: #f9f9f9; 
+    transform: scale(1.02);
+  }
+  
+  .fritto-row .col:first-child {
+    text-align: left;  
+    flex-grow: 1; 
+}
+
+  .fritto-row .col {
+    font-size: 1.2rem;
+  }
+  
+  .fritto-price {
+    font-weight: bold;
+    text-align: right;
+    padding-left: 20px;
+  }
+  
+  .fritto-row:last-child {
+    border-bottom: none;
+  }
+  
+  .bibite-menu {
+    background-color: white;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.bibite-menu .bibita-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 10px;
+    border-bottom: 1px solid #ddd;
+    font-size: 1.2rem;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.bibite-menu .bibita-row:hover {
+    background-color: #f9f9f9; 
+    transform: scale(1.02);
+}
+
+.bibita-row .col:first-child {
+    text-align: left;  
+    flex-grow: 1;
+}
+
+.bibita-row .col {
+    font-size: 1.2rem;
+}
+
+.bibita-price {
+    font-weight: bold;
+    text-align: right;
+    padding-left: 20px;
+}
+
+.bibita-row:last-child {
+    border-bottom: none;
+}
+
+.coperto-text {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+    font-size: 1.2rem;
+    text-align: right; 
+    margin-top: 20px; 
+    margin-right: 20px; 
+    color: #f39c12; 
+  }
