@@ -1,0 +1,40 @@
+nav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 20px;
+    position: fixed;
+  z-index: 999;
+  width: 100%;
+}
+
+.navbar .dropdown-menu {
+  padding: 0;
+  margin: 0;
+  border-left: none !important;
+  border-right: none !important;
+  left: 50%;
+  transform: translateX(-50%);
+  position: absolute;
+}
+
+.navbar .dropdown-item {
+  padding: 0.25rem 1rem; 
+}
+
+.custom-logout-button {
+  border-radius: 30px;
+  padding: 10px 20px; 
+  cursor: pointer; 
+  transition: box-shadow 0.3s ease; 
+}
+.custom-logout-button:hover {
+  background-color: #c82333; 
+  box-shadow: 4px 6px 4px 2px rgba(220, 53, 69, 0.6); 
+  cursor: pointer; 
+}
+
+.navbar .dropdown-menu {
+  border: none;
+  background-color: transparent;
+}
