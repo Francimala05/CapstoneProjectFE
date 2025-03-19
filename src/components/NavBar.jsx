@@ -45,7 +45,7 @@ function NavBar() {
               <Nav.Link onClick={handleShow} className="mx-2">
                 Prenota un tavolo
               </Nav.Link>
-              <Nav.Link href="#" className="mx-2">
+              <Nav.Link as={Link} to="/sudinoi" className="mx-2">
                 Su di noi
               </Nav.Link>
             </Nav>

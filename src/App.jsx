@@ -12,6 +12,7 @@ import Login from "./components/Login";
 import Register from "./components/Registrazione";
 import Menu from "./components/Menu";
 import Footer from "./components/Footer";
+import Sudinoi from "./components/Sudinoi";
 
 function App() {
   const location = useLocation();
@@ -27,6 +28,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/menù" element={<Menu />} />
+        <Route path="/sudinoi" element={<Sudinoi />} />
       </Routes>
       <Footer />
     </>
