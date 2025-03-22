@@ -1,7 +1,7 @@
 import Carousel from "react-bootstrap/Carousel";
-import Carosello1 from "../assets/Carosello1.jpg";
-import Carosello2 from "../assets/Carosello2.jpg";
-import Carosello3 from "../assets/Carosello3.jpg";
+import Carosello1 from "../assets/images/Carosello1.jpg";
+import Carosello2 from "../assets/images/Carosello2.jpg";
+import Carosello3 from "../assets/images/Carosello3.jpg";
 import { useState } from "react";
 import "../assets/styles/Aside.css";
 

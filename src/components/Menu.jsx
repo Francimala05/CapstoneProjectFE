@@ -119,7 +119,7 @@ function Menu() {
                 </Card.Text>
                 <Row>
                   <Col className="pizza-price">
-                    <strong>Singola:</strong> €{pizza.price}
+                    <strong>Singola:</strong> <br />€{pizza.price}
                   </Col>
                   <Col className="pizza-price">
                     <strong>1/2 Kg:</strong> <br /> €{pizza.mezzoChiloPrice}

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Container } from "react-bootstrap";
 import "../assets/styles/HomePage.css";
-import PanuozzoSpeciale from "../assets/PanuozzoSpeciale.jpg";
+import PanuozzoSpeciale from "../assets/images/PanuozzoSpeciale.jpg";
 import Carosello from "./CaroselloVerticale";
 import "../assets/styles/Aside.css";
 import { Link } from "react-router-dom";
