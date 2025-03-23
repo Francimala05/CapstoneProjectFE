@@ -29,6 +29,12 @@ function Carrello() {
   const handleCheckout = async () => {
     const token = localStorage.getItem("authToken");
 
+    setToastMessage("Ordine inviato con successo!");
+    setShowToast(true);
+    localStorage.removeItem("cart");
+    setCart([]);
+    navigate("/successorder", { state: { totale } });
+
     if (!token) {
       alert("Token mancante, per favore effettua il login.");
       navigate("/login");
@@ -86,6 +92,7 @@ function Carrello() {
       indirizzo: indirizzo,
     };
 
+    console.log(ordine);
     const url =
       deliveryMethod === "asporto"
         ? "http://localhost:8085/api/ordini/asporto/invia"
@@ -102,9 +109,8 @@ function Carrello() {
         body: JSON.stringify(ordine),
       });
 
-      const responseText = await response.text(); // Prendi il messaggio di errore dal server
+      const responseText = await response.text();
 
-      // Gestisci il caso di errore direttamente se lo stato non è ok
       if (!response.ok) {
         console.error(
           "Errore nell'invio dell'ordine. Status:",
@@ -114,16 +120,6 @@ function Carrello() {
         setShowToast(true);
         return;
       }
-
-      // In caso di successo
-      setToastMessage("Ordine inviato con successo!");
-      setShowToast(true);
-      console.log("Toast mostrato con messaggio: Ordine inviato con successo!");
-      console.log("Rimuovendo il carrello...");
-      localStorage.removeItem("cart");
-      setCart([]);
-      console.log("Navigating to successorder...");
-      navigate("/successorder", { state: { total: totale } });
     } catch (error) {
       console.error("Errore durante l'invio dell'ordine:", error);
       setToastMessage("Errore durante l'invio dell'ordine. Riprova.");

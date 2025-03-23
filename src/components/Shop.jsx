@@ -171,7 +171,6 @@ function Shop() {
         </Toast>
       </ToastContainer>
 
-      {/* Pizze */}
       <h5
         onClick={() => toggleSection("pizza")}
         className="menu-toggle text-warning"
@@ -261,7 +260,6 @@ function Shop() {
         </div>
       )}
 
-      {/* Panuozzi */}
       <h5
         onClick={() => toggleSection("panuozzo")}
         className="menu-toggle text-warning"
@@ -361,8 +359,6 @@ function Shop() {
           ))}
         </div>
       )}
-
-      {/* Bibite */}
       <h5
         onClick={() => toggleSection("bibite")}
         className="menu-toggle text-warning"
