@@ -15,6 +15,7 @@ import Footer from "./components/Footer";
 import Sudinoi from "./components/Sudinoi";
 import Shop from "./components/Shop";
 import Carrello from "./components/CarrelloPage";
+import SuccessOrder from "./components/SuccessOrder";
 
 function App() {
   const location = useLocation();
@@ -33,6 +34,7 @@ function App() {
         <Route path="/menù" element={<Menu />} />
         <Route path="/sudinoi" element={<Sudinoi />} />
         <Route path="/carrello" element={<Carrello />} />
+        <Route path="/successorder" element={<SuccessOrder />} />
       </Routes>
       <Footer />
     </>

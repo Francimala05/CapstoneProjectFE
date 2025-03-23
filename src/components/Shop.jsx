@@ -18,6 +18,7 @@ function Shop() {
   const [cart, setCart] = useState([]);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState("success");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -79,40 +80,47 @@ function Shop() {
     });
   };
   const addToCart = (item, type) => {
-    // Usa l'ID esistente se presente nei dati, altrimenti genera un ID unico
-    const itemId = item.id; // Assumiamo che item.id sia sempre presente nei dati validi dal backend.
+    const itemId = item.id;
 
     if (!itemId) {
-      // Se non c'è un id, genera un ID univoco (solo nel caso estremo)
-      item.id = Date.now(); // Genera un ID univoco basato sul timestamp
+      item.id = Date.now();
     }
 
-    // Usa il formato se presente (per le pizze), altrimenti "senza formato"
     const formato = item.formato || "senza formato";
 
-    // Genera una chiave unica utilizzando l'ID dell'item e il formato (se presente)
     const uniqueKey = `${itemId}-${formato}`;
 
-    // Crea un oggetto con tutti i dettagli dell'item
     const itemWithKey = { ...item, type, key: uniqueKey, shopId: "SHOP" };
 
     console.log("Aggiungo al carrello:", itemWithKey);
 
-    // Aggiungi l'articolo al carrello e salva nel localStorage
     setCart((prevCart) => {
       const newCart = [...prevCart, itemWithKey];
       localStorage.setItem("cart", JSON.stringify(newCart));
       return newCart;
     });
 
-    // Imposta il messaggio della Toast
     setToastMessage("Prodotto aggiunto all'ordine!");
+    setToastType("success");
     setShowToast(true);
   };
 
   const handleCartClick = () => {
-    navigate("/carrello", { state: { cart } });
-    window.scrollTo(0, 0);
+    const token = localStorage.getItem("authToken");
+
+    if (!token) {
+      setToastMessage("Per questa operazione è necessario il Login");
+      setToastType("error");
+      setShowToast(true);
+
+      setTimeout(() => {
+        navigate("/login");
+        window.scrollTo(0, 0);
+      }, 1000);
+    } else {
+      navigate("/carrello", { state: { cart } });
+      window.scrollTo(0, 0);
+    }
   };
 
   const toggleSection = (section) => {
@@ -153,7 +161,7 @@ function Shop() {
         }}
       >
         <Toast
-          className="bg-light"
+          className={`bg-light ${toastType === "error" ? "text-danger" : ""}`}
           show={showToast}
           onClose={() => setShowToast(false)}
           delay={3000}

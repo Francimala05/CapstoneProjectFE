@@ -141,7 +141,7 @@
 }
 
 .domicilio-details {
-  width: 80%;
+  width: 50%;
   margin-top: 20px;
 }
 
@@ -181,4 +181,10 @@ h3 .pickup-time, h3 .domicilio-details {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+.carrello-vuoto{
+  font-family: 'Montserrat', sans-serif;
+  font-size: 20px;
+  font-weight: bolder;
 }
