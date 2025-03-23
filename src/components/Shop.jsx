@@ -35,10 +35,19 @@ function Shop() {
             fetch("http://localhost:8085/api/fritti").then((res) => res.json()),
             fetch("http://localhost:8085/api/drinks").then((res) => res.json()),
           ]);
+
+        console.log("Struttura dati pizza:", pizzaData);
+        console.log("Struttura dati panuozzo:", panuozzoData);
+
+        console.log("Dati delle pizze:", pizzaData);
+        console.log("Dati dei panuozzi:", panuozzoData);
+        console.log("Dati dei fritti:", frittiData);
+        console.log("Dati delle bibite:", bibiteData);
         setPizzas(pizzaData);
         setPanuozzi(panuozzoData);
         setFritti(frittiData);
         setBibite(bibiteData);
+        logAllIds(pizzaData, panuozzoData, frittiData, bibiteData);
       } catch (error) {
         console.error("Errore nel recupero dei dati", error);
       } finally {
@@ -48,19 +57,61 @@ function Shop() {
 
     fetchData();
   }, []);
+  const logAllIds = (pizzas, panuozzi, fritti, bibite) => {
+    console.log("ID delle pizze:");
+    pizzas.forEach((pizza) => {
+      console.log(`Pizza ID: ${pizza.id}`);
+    });
 
-  const addToCart = (item) => {
+    console.log("ID dei panuozzi:");
+    panuozzi.forEach((panuozzo) => {
+      console.log(`Panuozzo ID: ${panuozzo.id}`);
+    });
+
+    console.log("ID dei fritti:");
+    fritti.forEach((fritto) => {
+      console.log(`Fritto ID: ${fritto.id}`);
+    });
+
+    console.log("ID delle bibite:");
+    bibite.forEach((bibita) => {
+      console.log(`Bibita ID: ${bibita.id}`);
+    });
+  };
+  const addToCart = (item, type) => {
+    // Usa l'ID esistente se presente nei dati, altrimenti genera un ID unico
+    const itemId = item.id; // Assumiamo che item.id sia sempre presente nei dati validi dal backend.
+
+    if (!itemId) {
+      // Se non c'è un id, genera un ID univoco (solo nel caso estremo)
+      item.id = Date.now(); // Genera un ID univoco basato sul timestamp
+    }
+
+    // Usa il formato se presente (per le pizze), altrimenti "senza formato"
+    const formato = item.formato || "senza formato";
+
+    // Genera una chiave unica utilizzando l'ID dell'item e il formato (se presente)
+    const uniqueKey = `${itemId}-${formato}`;
+
+    // Crea un oggetto con tutti i dettagli dell'item
+    const itemWithKey = { ...item, type, key: uniqueKey, shopId: "SHOP" };
+
+    console.log("Aggiungo al carrello:", itemWithKey);
+
+    // Aggiungi l'articolo al carrello e salva nel localStorage
     setCart((prevCart) => {
-      const newCart = [...prevCart, item];
+      const newCart = [...prevCart, itemWithKey];
       localStorage.setItem("cart", JSON.stringify(newCart));
       return newCart;
     });
+
+    // Imposta il messaggio della Toast
     setToastMessage("Prodotto aggiunto all'ordine!");
     setShowToast(true);
   };
 
   const handleCartClick = () => {
-    navigate("/Carrello", { state: { cart } });
+    navigate("/carrello", { state: { cart } });
     window.scrollTo(0, 0);
   };
 
@@ -112,6 +163,7 @@ function Shop() {
         </Toast>
       </ToastContainer>
 
+      {/* Pizze */}
       <h5
         onClick={() => toggleSection("pizza")}
         className="menu-toggle text-warning"
@@ -122,7 +174,10 @@ function Shop() {
       {isPizzaSectionVisible && (
         <div className="pizza-menu">
           {pizzas.map((pizza) => (
-            <Card key={pizza.id} className="pizza-card">
+            <Card
+              key={`${pizza.id}-${pizza.formato || "singola"}`}
+              className="pizza-card"
+            >
               <Card.Img
                 variant="top"
                 src={
@@ -143,7 +198,15 @@ function Shop() {
                   <Col
                     className="pizza-price1"
                     onClick={() =>
-                      addToCart({ name: pizza.name, price: pizza.price })
+                      addToCart(
+                        {
+                          id: pizza.id,
+                          name: pizza.name,
+                          price: pizza.price,
+                          formato: "singola",
+                        },
+                        "pizza"
+                      )
                     }
                     style={{ cursor: "pointer" }}
                   >
@@ -152,10 +215,15 @@ function Shop() {
                   <Col
                     className="pizza-price1"
                     onClick={() =>
-                      addToCart({
-                        name: pizza.name,
-                        price: pizza.mezzoChiloPrice,
-                      })
+                      addToCart(
+                        {
+                          id: pizza.id,
+                          name: pizza.name,
+                          price: pizza.mezzoChiloPrice,
+                          formato: "mezzo chilo",
+                        },
+                        "pizza"
+                      )
                     }
                     style={{ cursor: "pointer" }}
                   >
@@ -164,7 +232,15 @@ function Shop() {
                   <Col
                     className="pizza-price1"
                     onClick={() =>
-                      addToCart({ name: pizza.name, price: pizza.chiloPrice })
+                      addToCart(
+                        {
+                          id: pizza.id,
+                          name: pizza.name,
+                          price: pizza.chiloPrice,
+                          formato: "chilo",
+                        },
+                        "pizza"
+                      )
                     }
                     style={{ cursor: "pointer" }}
                   >
@@ -176,6 +252,8 @@ function Shop() {
           ))}
         </div>
       )}
+
+      {/* Panuozzi */}
       <h5
         onClick={() => toggleSection("panuozzo")}
         className="menu-toggle text-warning"
@@ -186,7 +264,10 @@ function Shop() {
       {isPanuozzoSectionVisible && (
         <div className="panuozzo-menu">
           {panuozzi.map((panuozzo) => (
-            <Card key={panuozzo.id} className="panuozzo-card">
+            <Card
+              key={`${panuozzo.id}-${panuozzo.formato || "singolo"}`}
+              className="panuozzo-card"
+            >
               <Card.Img
                 variant="top"
                 src={panuozzo.imageUrl}
@@ -206,10 +287,15 @@ function Shop() {
                   <Col
                     className="panuozzo-price1"
                     onClick={() =>
-                      addToCart({
-                        name: panuozzo.name,
-                        price: panuozzo.mezzoPrice,
-                      })
+                      addToCart(
+                        {
+                          id: panuozzo.id,
+                          name: panuozzo.name,
+                          price: panuozzo.mezzoPrice,
+                          formato: "singolo",
+                        },
+                        "panuozzo"
+                      )
                     }
                     style={{ cursor: "pointer" }}
                   >
@@ -218,10 +304,15 @@ function Shop() {
                   <Col
                     className="panuozzo-price1"
                     onClick={() =>
-                      addToCart({
-                        name: panuozzo.name,
-                        price: panuozzo.interoPrice,
-                      })
+                      addToCart(
+                        {
+                          id: panuozzo.id,
+                          name: panuozzo.name,
+                          price: panuozzo.interoPrice,
+                          formato: "intero",
+                        },
+                        "panuozzo"
+                      )
                     }
                     style={{ cursor: "pointer" }}
                   >
@@ -234,6 +325,7 @@ function Shop() {
         </div>
       )}
 
+      {/* Fritti */}
       <h5
         onClick={() => toggleSection("fritti")}
         className="menu-toggle text-warning"
@@ -245,10 +337,13 @@ function Shop() {
         <div className="fritti-menu">
           {fritti.map((fritto) => (
             <Row
-              key={fritto.id}
+              key={`${fritto.id}-${fritto.name}`}
               className="fritto-row1"
               onClick={() =>
-                addToCart({ name: fritto.name, price: fritto.price })
+                addToCart(
+                  { id: fritto.id, name: fritto.name, price: fritto.price },
+                  "fritto"
+                )
               }
               style={{ cursor: "pointer" }}
             >
@@ -259,6 +354,7 @@ function Shop() {
         </div>
       )}
 
+      {/* Bibite */}
       <h5
         onClick={() => toggleSection("bibite")}
         className="menu-toggle text-warning"
@@ -270,10 +366,13 @@ function Shop() {
         <div className="bibite-menu">
           {bibite.map((bibita) => (
             <Row
-              key={bibita.id}
+              key={`${bibita.id}-${bibita.formato}`}
               className="bibita-row1"
               onClick={() =>
-                addToCart({ name: bibita.name, price: bibita.price })
+                addToCart(
+                  { id: bibita.id, name: bibita.name, price: bibita.price },
+                  "bibita"
+                )
               }
               style={{ cursor: "pointer" }}
             >

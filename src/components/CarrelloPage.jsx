@@ -1,117 +1,101 @@
 import React, { useState, useEffect } from "react";
-import { Button, Form } from "react-bootstrap";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import "../assets/styles/CarrelloPage.css";
+import {
+  Button,
+  Row,
+  Col,
+  ListGroup,
+  Form,
+  ToastContainer,
+  Toast,
+} from "react-bootstrap";
 import { Trash3Fill } from "react-bootstrap-icons";
 import jwt_decode from "jwt-decode";
+import { useNavigate } from "react-router-dom";
+import "../assets/styles/CarrelloPage.css"; // Aggiungi il tuo stile personalizzato
 
 function Carrello() {
-  const location = useLocation();
+  const [cart, setCart] = useState([]); // Stato per il carrello
+  const [totale, setTotale] = useState(0); // Stato per il totale dell'ordine
+  const [showToast, setShowToast] = useState(false); // Stato per la gestione del Toast
+  const [toastMessage, setToastMessage] = useState(""); // Messaggio del Toast
+  const [dataRitiro, setDataRitiro] = useState(""); // Stato per la data di ritiro
+  const [orarioRitiro, setOrarioRitiro] = useState(""); // Stato per l'orario di ritiro
+  const [esigenzeParticolari, setEsigenzeParticolari] = useState(""); // Stato per le esigenze particolari
   const navigate = useNavigate();
 
-  const cart =
-    location.state?.cart || JSON.parse(localStorage.getItem("cart")) || [];
-
-  const [deliveryOption, setDeliveryOption] = useState("");
-  const [pickupTime, setPickupTime] = useState("");
-  const [pickupDate, setPickupDate] = useState("");
-  const [deliveryDate, setDeliveryDate] = useState("");
-  const [address, setAddress] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [updatedCart, setUpdatedCart] = useState(cart);
-
+  // Carica il carrello dal localStorage al montaggio del componente
   useEffect(() => {
-    if (!localStorage.getItem("authToken")) {
-      window.requestAnimationFrame(() => {
-        window.scrollTo(0, 0);
-        setTimeout(() => {
-          navigate("/login", { replace: true });
-        }, 100);
-      });
-    }
-  }, [navigate]);
+    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+    setCart(storedCart);
 
-  useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
-  }, [updatedCart]);
+    const total = storedCart.reduce((acc, item) => acc + item.price, 0);
+    setTotale(total);
+  }, []);
 
-  const getTotalPrice = () => {
-    let total = updatedCart.reduce((total, item) => total + item.price, 0);
-    if (deliveryOption === "Domicilio") {
-      total += 1;
-    }
-    return total.toFixed(2);
-  };
-
-  const handleDeliveryOptionChange = (e) => {
-    setDeliveryOption(e.target.value);
-  };
-
-  const removeItemFromCart = (index) => {
-    const newCart = updatedCart.filter((_, idx) => idx !== index);
-    setUpdatedCart(newCart);
-  };
-
-  const getUsernameFromToken = () => {
+  // Funzione per il checkout e invio dell'ordine
+  const handleCheckout = async () => {
     const token = localStorage.getItem("authToken");
+
+    // Verifica se il token esiste e se è valido
     if (!token) {
-      console.log("Token non trovato, assicurati di essere loggato.");
-      return null;
-    }
-
-    try {
-      const decodedToken = jwt_decode(token);
-      return decodedToken.username || decodedToken.sub || decodedToken.name;
-    } catch (error) {
-      console.error("Errore nella decodifica del token:", error);
-      return null;
-    }
-  };
-
-  const handleSubmitOrder = async () => {
-    const userInfo = getUsernameFromToken();
-    if (!userInfo) {
-      alert("Per inviare l'ordine, è necessario essere loggati.");
+      alert("Token mancante, per favore effettua il login.");
       navigate("/login");
       return;
     }
 
-    if (
-      !pickupDate ||
-      !pickupTime ||
-      (deliveryOption === "Domicilio" && (!address || !phoneNumber))
-    ) {
-      alert("Compila tutti i campi obbligatori.");
+    try {
+      const decodedToken = jwt_decode(token);
+      const currentTime = Date.now() / 1000;
+      if (decodedToken.exp < currentTime) {
+        alert("Il tuo token è scaduto, effettua il login di nuovo.");
+        localStorage.removeItem("authToken");
+        navigate("/login");
+        return;
+      }
+    } catch (error) {
+      console.error("Token invalido", error);
+      alert("Il tuo token non è valido. Effettua il login di nuovo.");
+      navigate("/login");
       return;
     }
 
-    console.log(userInfo);
+    // Verifica se la data e l'orario di ritiro sono stati selezionati
+    if (!dataRitiro || !orarioRitiro) {
+      setToastMessage(
+        "Per favore, seleziona una data e un orario per il ritiro."
+      );
+      setShowToast(true);
+      return;
+    }
 
-    const orderData = {
-      idUtente: userInfo.id,
-      nomeUtente: userInfo.nome,
-      cognomeUtente: userInfo.cognome,
-      dataRitiro: deliveryOption === "Asporto" ? pickupDate : deliveryDate,
-      orarioRitiro: pickupTime,
-      totale: getTotalPrice(),
-      idPizze: [],
-      idPanuozzi: [],
-      idFritti: [],
-      idBibite: [],
+    const user = jwt_decode(token); // Decodifica il token per ottenere il nome utente
+    console.log("User decoded:", user);
+
+    // Crea l'oggetto dell'ordine
+    const ordineAsporto = {
+      pizzeIds: cart
+        .filter((item) => item.type === "pizza")
+        .map((item) => item.id),
+      panuozziIds: cart
+        .filter((item) => item.type === "panuozzo")
+        .map((item) => item.id),
+      frittiIds: cart
+        .filter((item) => item.type === "fritto")
+        .map((item) => item.id),
+      bibiteIds: cart
+        .filter((item) => item.type === "bibita")
+        .map((item) => item.id),
+      esigenzeParticolari:
+        esigenzeParticolari || "Nessuna esigenza particolare", // Default value if empty
+      data: dataRitiro,
+      orario: orarioRitiro,
+      username: user.sub,
+      conto: totale,
     };
 
-    updatedCart.forEach((item) => {
-      if (item.name.toLowerCase().includes("pizza")) {
-        orderData.idPizze.push(item.id);
-      } else if (item.name.toLowerCase().includes("panuozzo")) {
-        orderData.idPanuozzi.push(item.id);
-      } else if (item.name.toLowerCase().includes("fritto")) {
-        orderData.idFritti.push(item.id);
-      } else if (item.name.toLowerCase().includes("bibita")) {
-        orderData.idBibite.push(item.id);
-      }
-    });
+    console.log("Ordine Asporto:", ordineAsporto);
 
+    // Invia l'ordine all'API
     try {
       const response = await fetch(
         "http://localhost:8085/api/ordini/asporto/invia",
@@ -119,140 +103,155 @@ function Carrello() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            Authorization: `Bearer ${token}`, // Corretta sintassi per l'autenticazione
           },
-          body: JSON.stringify(orderData),
+          body: JSON.stringify(ordineAsporto),
         }
       );
 
       if (response.ok) {
-        alert("Ordine inviato con successo!");
-        setUpdatedCart([]);
-        localStorage.setItem("cart", JSON.stringify([]));
-        // navigate("/Ordine_inviato");
+        setToastMessage("Ordine inviato con successo!");
+        setShowToast(true);
+        localStorage.removeItem("cart");
+        setCart([]);
+      } else {
+        console.error(
+          "Errore nell'invio dell'ordine. Status:",
+          response.status
+        );
+        throw new Error("Errore nell'invio dell'ordine");
       }
     } catch (error) {
       console.error("Errore durante l'invio dell'ordine:", error);
-      alert("Si è verificato un errore durante l'invio dell'ordine.");
+      setToastMessage("Errore durante l'invio dell'ordine. Riprova.");
+      setShowToast(true);
     }
+  };
+
+  const handleRemoveItem = (itemToRemove) => {
+    const updatedCart = cart.filter((item) => item.id !== itemToRemove.id);
+    setCart(updatedCart);
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+
+    const newTotale = updatedCart.reduce((acc, item) => acc + item.price, 0);
+    setTotale(newTotale);
   };
 
   return (
     <div className="carrello-container">
       <h4 className="carrello-title">Il tuo Ordine</h4>
+
+      <ToastContainer
+        className="p-3"
+        style={{
+          position: "fixed",
+          bottom: "20px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          zIndex: 9999,
+        }}
+      >
+        <Toast
+          className={`bg-${
+            toastMessage.includes("Errore") ? "danger" : "light"
+          }`}
+          show={showToast}
+          onClose={() => setShowToast(false)}
+          delay={3000}
+          autohide
+        >
+          <Toast.Body>{toastMessage}</Toast.Body>
+        </Toast>
+      </ToastContainer>
+
       <div className="carrello-items">
-        {updatedCart.map((item, index) => (
-          <div key={index} className="carrello-item">
-            <span className="item-name">{item.name}</span>
-            <span className="item-price">€{item.price}</span>
-            <span
-              className="item-remove"
-              onClick={() => removeItemFromCart(index)}
-            >
-              <div className="trash-icon-container">
-                <Trash3Fill />
+        {cart.length > 0 ? (
+          <div className="carrello-items">
+            {cart.map((item) => (
+              <div key={item.key} className="carrello-item">
+                <div className="item-name">{item.name}</div>
+                <div className="item-price">€{item.price}</div>
+                <div className="item-remove">
+                  <div
+                    className="trash-icon-container"
+                    onClick={() => handleRemoveItem(item)}
+                  >
+                    <Trash3Fill color="white" />
+                  </div>
+                </div>
               </div>
-            </span>
+            ))}
+            <div className="total">
+              <h3 className="total">Totale: €{totale.toFixed(2)}</h3>
+            </div>
+            <div className="add-products">
+              <Button
+                className="btn-transparent"
+                onClick={() => navigate("/shop")}
+              >
+                Aggiungi prodotti
+              </Button>
+            </div>
           </div>
-        ))}
-      </div>
-      <div className="add-products">
-        <Link to="/shop">
-          <Button className="btn-transparent">Aggiungi prodotti</Button>
-        </Link>
-      </div>
-      <div className="total">
-        <h3>Totale: €{getTotalPrice()}</h3>
-      </div>
-      <div className="decisional-section">
-        <div className="delivery-option-container">
-          <div
-            className={`delivery-option ${
-              deliveryOption === "Asporto" ? "selected" : ""
-            }`}
-            onClick={() =>
-              handleDeliveryOptionChange({ target: { value: "Asporto" } })
-            }
-          >
-            <h3>Asporto</h3>
+        ) : (
+          <div className="carrello-empty">
+            <p>Il carrello è vuoto.</p>
+            <Button
+              className="btn-transparent"
+              onClick={() => navigate("/shop")}
+            >
+              Aggiungi prodotti
+            </Button>
           </div>
-          <div
-            className={`delivery-option ${
-              deliveryOption === "Domicilio" ? "selected" : ""
-            }`}
-            onClick={() =>
-              handleDeliveryOptionChange({ target: { value: "Domicilio" } })
-            }
-          >
-            <h3>Domicilio</h3>
+        )}
+        <div className="decisional-section">
+          <div className="delivery-option-container">
+            <div className="delivery-option selected">Asporto</div>
+          </div>
+
+          <div className="domicilio-details">
+            <Form>
+              <Form.Group controlId="formDataRitiro">
+                <Form.Label>Data di ritiro</Form.Label>
+                <Form.Control
+                  type="date"
+                  value={dataRitiro}
+                  onChange={(e) => setDataRitiro(e.target.value)}
+                />
+              </Form.Group>
+
+              <Form.Group controlId="formOrarioRitiro" className="mt-2">
+                <Form.Label>Orario di ritiro</Form.Label>
+                <Form.Control
+                  className="pickup-time"
+                  type="time"
+                  value={orarioRitiro}
+                  onChange={(e) => setOrarioRitiro(e.target.value)}
+                />
+              </Form.Group>
+
+              <Form.Group controlId="formEsigenzeParticolari" className="mt-2">
+                <Form.Label>Esigenze particolari</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows={3}
+                  value={esigenzeParticolari}
+                  onChange={(e) => setEsigenzeParticolari(e.target.value)}
+                  placeholder="Inserisci eventuali esigenze particolari..."
+                />
+              </Form.Group>
+
+              <button
+                className="checkout-btn mt-3"
+                onClick={handleCheckout}
+                disabled={cart.length === 0 || !dataRitiro || !orarioRitiro} // Disabilita il pulsante se il carrello è vuoto o se i campi obbligatori non sono compilati
+              >
+                Procedi con l'Ordine
+              </button>
+            </Form>
           </div>
         </div>
-
-        {(deliveryOption === "Asporto" || deliveryOption === "Domicilio") && (
-          <div className="mt-4">
-            <h3>
-              {deliveryOption === "Asporto"
-                ? "Data di ritiro"
-                : "Data di consegna"}
-              :
-            </h3>
-            <Form.Group className="pickup-date">
-              <Form.Control
-                type="date"
-                value={deliveryOption === "Asporto" ? pickupDate : deliveryDate}
-                onChange={(e) =>
-                  deliveryOption === "Asporto"
-                    ? setPickupDate(e.target.value)
-                    : setDeliveryDate(e.target.value)
-                }
-                placeholder="gg/mm/aaaa"
-              />
-            </Form.Group>
-            <h3 className="mt-4">
-              {deliveryOption === "Asporto"
-                ? "Orario di ritiro"
-                : "Orario di consegna"}{" "}
-              preferenziale:
-            </h3>
-            <Form.Group className="pickup-time">
-              <Form.Control
-                type="time"
-                value={pickupTime}
-                onChange={(e) => setPickupTime(e.target.value)}
-                placeholder="--:--"
-              />
-            </Form.Group>
-          </div>
-        )}
-
-        {deliveryOption === "Domicilio" && (
-          <div className="domicilio-details mt-4">
-            <Form.Group>
-              <Form.Control
-                type="text"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                placeholder="Inserisci il tuo indirizzo"
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Control
-                type="tel"
-                value={phoneNumber}
-                onChange={(e) =>
-                  setPhoneNumber(e.target.value.replace(/\D/g, ""))
-                }
-                placeholder="Inserisci il tuo numero di telefono"
-                maxLength="10"
-              />
-            </Form.Group>
-          </div>
-        )}
       </div>
-
-      <Button className="checkout-btn" onClick={handleSubmitOrder}>
-        Invia l'ordine!
-      </Button>
     </div>
   );
 }
