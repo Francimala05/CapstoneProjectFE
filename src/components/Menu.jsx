@@ -89,7 +89,7 @@ function Menu() {
 
   return (
     <div>
-      <h4 className="text-warning menu-title">Il nostro Menù</h4>
+      <h4 className="text-warning menu-title">Il nostro Menù!</h4>
       <h5 onClick={togglePizzaSection} className="menu-toggle text-warning">
         {isPizzaSectionVisible ? "Pizze" : "Pizze"}{" "}
         {isPizzaSectionVisible ? <CaretDownFill /> : <CaretRightFill />}

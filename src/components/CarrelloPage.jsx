@@ -29,11 +29,16 @@ function Carrello() {
   const handleCheckout = async () => {
     const token = localStorage.getItem("authToken");
 
+    let totaleConSpedizione = totale;
+    if (deliveryMethod === "domicilio") {
+      totaleConSpedizione += 1;
+    }
+
     setToastMessage("Ordine inviato con successo!");
     setShowToast(true);
     localStorage.removeItem("cart");
     setCart([]);
-    navigate("/successorder", { state: { totale } });
+    navigate("/successorder", { state: { totaleConSpedizione } });
 
     if (!token) {
       alert("Token mancante, per favore effettua il login.");
@@ -87,7 +92,7 @@ function Carrello() {
       data: dataRitiro,
       orario: orarioRitiro,
       username: user.sub,
-      conto: totale,
+      conto: totaleConSpedizione,
       telefono: telefono,
       indirizzo: indirizzo,
     };
@@ -181,7 +186,13 @@ function Carrello() {
               </div>
             ))}
             <div className="total">
-              <h3 className="total">Totale: €{totale.toFixed(2)}</h3>
+              <h3 className="total">
+                {" "}
+                Totale: €
+                {(deliveryMethod === "domicilio" ? totale + 1 : totale).toFixed(
+                  2
+                )}
+              </h3>
             </div>
             <div className="add-products">
               <Button
@@ -226,77 +237,104 @@ function Carrello() {
 
           {deliveryMethod && (
             <div className="domicilio-details">
-              <Form>
-                <h3>Data di ritiro</h3>
-                <Form.Group controlId="formDataRitiro">
-                  <Form.Control
-                    type="date"
-                    value={dataRitiro}
-                    onChange={(e) => setDataRitiro(e.target.value)}
-                  />
-                </Form.Group>
+              {deliveryMethod === "asporto" && (
+                <>
+                  <h3>Data di ritiro</h3>
+                  <Form.Group controlId="formDataRitiro">
+                    <Form.Control
+                      type="date"
+                      value={dataRitiro}
+                      onChange={(e) => setDataRitiro(e.target.value)}
+                    />
+                  </Form.Group>
 
-                <h3 className="mt-4">Orario di ritiro preferenziale</h3>
-                <Form.Group
-                  controlId="formOrarioRitiro"
-                  className="pickup-time"
-                >
-                  <Form.Control
-                    type="time"
-                    value={orarioRitiro}
-                    onChange={(e) => setOrarioRitiro(e.target.value)}
-                  />
-                </Form.Group>
+                  <h3 className="mt-4">Orario di ritiro preferenziale</h3>
+                  <Form.Group
+                    controlId="formOrarioRitiro"
+                    className="pickup-time"
+                  >
+                    <Form.Control
+                      type="time"
+                      value={orarioRitiro}
+                      onChange={(e) => setOrarioRitiro(e.target.value)}
+                    />
+                  </Form.Group>
+                </>
+              )}
 
-                <Form.Group
-                  controlId="formEsigenzeParticolari"
-                  className="mt-4"
-                >
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    value={esigenzeParticolari}
-                    onChange={(e) => setEsigenzeParticolari(e.target.value)}
-                    placeholder="Inserisci eventuali esigenze particolari..."
-                  />
-                </Form.Group>
+              {deliveryMethod === "domicilio" && (
+                <>
+                  <h3>Data di consegna</h3>
+                  <Form.Group controlId="formDataRitiro">
+                    <Form.Control
+                      type="date"
+                      value={dataRitiro}
+                      onChange={(e) => setDataRitiro(e.target.value)}
+                    />
+                  </Form.Group>
 
-                {deliveryMethod === "domicilio" && (
-                  <>
-                    <Form.Group controlId="formTelefono" className="mt-4">
-                      <Form.Control
-                        type="tel"
-                        value={telefono}
-                        onChange={(e) => setTelefono(e.target.value)}
-                        placeholder="Inserisci il tuo numero di telefono"
-                      />
-                    </Form.Group>
+                  <h3 className="mt-4">Orario di consegna preferenziale</h3>
+                  <Form.Group
+                    controlId="formOrarioRitiro"
+                    className="pickup-time"
+                  >
+                    <Form.Control
+                      type="time"
+                      value={orarioRitiro}
+                      onChange={(e) => setOrarioRitiro(e.target.value)}
+                    />
+                  </Form.Group>
 
-                    <Form.Group controlId="formIndirizzo" className="mt-4">
-                      <Form.Control
-                        type="text"
-                        value={indirizzo}
-                        onChange={(e) => setIndirizzo(e.target.value)}
-                        placeholder="Inserisci l'indirizzo di consegna"
-                      />
-                    </Form.Group>
-                  </>
-                )}
+                  <Form.Group
+                    controlId="formEsigenzeParticolari"
+                    className="mt-4"
+                  >
+                    <Form.Control
+                      as="textarea"
+                      rows={3}
+                      value={esigenzeParticolari}
+                      onChange={(e) => setEsigenzeParticolari(e.target.value)}
+                      placeholder="Inserisci eventuali esigenze particolari..."
+                    />
+                  </Form.Group>
 
-                <button
-                  className="checkout-btn mt-3"
-                  onClick={handleCheckout}
-                  disabled={
-                    cart.length === 0 ||
-                    !dataRitiro ||
-                    !orarioRitiro ||
-                    (deliveryMethod === "domicilio" &&
-                      (!telefono || !indirizzo))
-                  }
-                >
-                  Procedi con l'Ordine
-                </button>
-              </Form>
+                  <Form.Group controlId="formTelefono" className="mt-4">
+                    <Form.Control
+                      type="tel"
+                      value={telefono}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (/^\d*$/.test(value)) {
+                          setTelefono(value);
+                        }
+                      }}
+                      placeholder="Inserisci il tuo numero di telefono"
+                    />
+                  </Form.Group>
+
+                  <Form.Group controlId="formIndirizzo" className="mt-4">
+                    <Form.Control
+                      type="text"
+                      value={indirizzo}
+                      onChange={(e) => setIndirizzo(e.target.value)}
+                      placeholder="Inserisci l'indirizzo di consegna"
+                    />
+                  </Form.Group>
+                </>
+              )}
+
+              <button
+                className="checkout-btn mt-3"
+                onClick={handleCheckout}
+                disabled={
+                  cart.length === 0 ||
+                  !dataRitiro ||
+                  !orarioRitiro ||
+                  (deliveryMethod === "domicilio" && (!telefono || !indirizzo))
+                }
+              >
+                Procedi con l'Ordine
+              </button>
             </div>
           )}
         </div>

@@ -1,0 +1,45 @@
+.profilo-container {
+    margin-top: 20px;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .profilo-container h1 {
+    font-family: "Caveat", sans-serif;
+    font-weight: 500;
+    font-size: 60px;
+    color: #f39c12;
+  }
+  
+  .profilo-container h2 {
+    font-family: "Montserrat", sans-serif;
+    font-size: 40px;
+    text-align: left;
+    padding-top: 10px;
+    padding-bottom: 20px;
+  }
+  
+  .profilo-container h5 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 25px;
+    text-align: left;
+    padding-left: 20px;
+    color: #555;
+  }
+  
+  .personal-info {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 30px;
+    color: #333;
+    text-align: left;
+    margin-left: 20px;
+  }
+  
+  .profilo-title {
+    text-align: left;
+    font-size: 40px;
+    margin-bottom: 20px;
+    padding-left: 10px;
+    margin-top: 20px;
+  }
+  

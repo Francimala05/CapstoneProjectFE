@@ -3,8 +3,7 @@ import React from "react";
 import { useState } from "react";
 import { Form, Button, Container } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import logo from "../assets/images/LogoPizzaPazzaGiallo.jpg";
-
+import "../assets/styles/Login.css";
 function Register() {
   const [nome, setNome] = useState("");
   const [cognome, setCognome] = useState("");
@@ -68,8 +67,7 @@ function Register() {
   };
 
   return (
-    <Container>
-      <img src={logo} alt="Logo" style={{ height: "250px" }} />
+    <Container className="register-container">
       <h1 className="my-4 text-center text-warning">Registrati</h1>
       <Form onSubmit={handleRegister}>
         <Form.Group controlId="formNome">
@@ -78,7 +76,7 @@ function Register() {
             placeholder="Inserisci il tuo nome"
             value={nome}
             onChange={(e) => setNome(e.target.value)}
-            className="mt-4"
+            className="mt-4 input-field"
           />
         </Form.Group>
 
@@ -88,7 +86,7 @@ function Register() {
             placeholder="Inserisci il tuo cognome"
             value={cognome}
             onChange={(e) => setCognome(e.target.value)}
-            className="mt-4"
+            className="mt-4 input-field"
           />
         </Form.Group>
 
@@ -98,7 +96,7 @@ function Register() {
             placeholder="Inserisci il tuo username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            className="mt-4"
+            className="mt-4 input-field"
           />
         </Form.Group>
 
@@ -108,7 +106,7 @@ function Register() {
             placeholder="Inserisci la tua email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="mt-4"
+            className="mt-4 input-field"
           />
         </Form.Group>
 
@@ -118,7 +116,7 @@ function Register() {
             placeholder="Inserisci la tua password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="mt-4"
+            className="mt-4 input-field"
           />
         </Form.Group>
 
@@ -128,18 +126,17 @@ function Register() {
             placeholder="Conferma la tua password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className="mt-4"
+            className="mt-4 input-field"
           />
         </Form.Group>
 
-        <Button variant="success" type="submit" className="mt-4">
+        <Button variant="success" type="submit" className="mt-4  submit-button">
           Continua
         </Button>
       </Form>
       <p className="mt-5 text-warning">
-        Sei già registrato?
-        <Link as={Link} to="/login" href="">
-          Accedi qui!
+        <Link as={Link} to="/login" className="link-text">
+          Sei già registrato? Accedi qui!
         </Link>
       </p>
     </Container>

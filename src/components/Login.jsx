@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Form, Button, Container } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import logo from "../assets/images/LogoPizzaPazzaGiallo.jpg";
+import "../assets/styles/Login.css";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -50,8 +50,7 @@ function Login() {
   };
 
   return (
-    <Container>
-      <img src={logo} alt="Logo" style={{ height: "250px" }} />
+    <Container className="register-container">
       <h1 className="my-4 text-warning">Accedi</h1>
       <Form onSubmit={handleLogin}>
         <Form.Group controlId="formUsername">
@@ -60,6 +59,7 @@ function Login() {
             placeholder="Inserisci il tuo username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            className="mt-4 input-field"
           />
         </Form.Group>
 
@@ -69,18 +69,17 @@ function Login() {
             placeholder="Inserisci la tua password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="mt-4"
+            className="mt-4 input-field"
           />
         </Form.Group>
 
-        <Button variant="success" type="submit" className="mt-4">
+        <Button variant="success" type="submit" className="submit-button mt-4">
           Continua
         </Button>
       </Form>
       <p className="mt-5 text-warning">
-        Sei nuovo?
-        <Link as={Link} to="/register" href="">
-          Registrati qui!
+        <Link as={Link} to="/register" className="link-text">
+          Sei nuovo? Registrati qui!
         </Link>
       </p>
     </Container>
