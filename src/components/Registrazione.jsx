@@ -47,7 +47,9 @@ function Register() {
       .then((data) => {
         console.log("Dati ricevuti dal server:", data);
         if (data.includes("è stato inserito correttamente nel sistema")) {
-          localStorage.setItem("authToken", data);
+          localStorage.setItem("authToken", data.token);
+          localStorage.setItem("username", data.username);
+          localStorage.setItem("userData", JSON.stringify(data.userData));
           alert("Registrazione completata con successo!");
           setNome("");
           setCognome("");

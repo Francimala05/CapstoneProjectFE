@@ -12,7 +12,6 @@ function Login() {
     e.preventDefault();
 
     const loginRequest = { username, password };
-
     // Iniziamo la richiesta di login
     fetch("http://localhost:8085/utente/login", {
       method: "POST",
@@ -22,27 +21,38 @@ function Login() {
       body: JSON.stringify(loginRequest),
     })
       .then((response) => {
-        // Controlliamo se la risposta è valida
         if (!response.ok) {
           throw new Error(
             `Errore HTTP: ${response.status} ${response.statusText}`
           );
         }
-        return response.text(); // Converto la risposta in testo (JWT)
+        return response.text();
       })
       .then((data) => {
-        // Visualizziamo la risposta per capire cosa contiene
-        console.log("Dati ricevuti dal server:", data);
+        try {
+          const parsedData = JSON.parse(data);
+          console.log("Dati ricevuti dal server:", parsedData);
+          if (parsedData && parsedData.token) {
+            localStorage.setItem("authToken", parsedData.token);
 
-        if (data) {
-          // Memorizza il token nel localStorage
-          localStorage.setItem("authToken", data);
-          alert("Login effettuato con successo!");
-          navigate("/"); // Torna alla home page dopo il login
-        } else {
-          alert("Credenziali non valide!");
+            if (parsedData.username) {
+              localStorage.setItem("username", parsedData.username);
+            } else {
+              console.error(
+                "Errore: username non trovato nei dati del server."
+              );
+            }
+            alert("Login effettuato con successo!");
+            navigate("/");
+          } else {
+            alert("Credenziali non valide!");
+          }
+        } catch (error) {
+          console.error("Errore nel parsing della risposta:", error);
+          alert("Errore durante il parsing dei dati.");
         }
       })
+
       .catch((error) => {
         console.error("Errore durante il login:", error);
         alert(`Errore durante il login: ${error.message}`);

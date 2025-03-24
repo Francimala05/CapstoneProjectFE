@@ -1,83 +1,127 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "../assets/styles/Profilo.css";
+import { CaretDownFill, CaretRightFill } from "react-bootstrap-icons";
 
 function Profilo() {
   const [userData, setUserData] = useState(null);
-  const [bookings, setBookings] = useState([]);
-  const [orders, setOrders] = useState([]);
+  const [error, setError] = useState(null);
+  const [isInfoVisible, setIsInfoVisible] = useState(true);
+  const [isPrenotazioniVisible, setIsPrenotazioniVisible] = useState(true);
+  const [isOrdiniVisible, setIsOrdiniVisible] = useState(true);
+  const navigate = useNavigate();
+  const isLoggedIn = localStorage.getItem("authToken");
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const userResponse = await fetch("/api/utente");
-        const userJson = await userResponse.json();
-        setUserData(userJson);
+    if (!isLoggedIn) {
+      navigate("/login");
+    } else {
+      const username = localStorage.getItem("username");
 
-        const bookingsResponse = await fetch("/api/user/bookings");
-        const bookingsJson = await bookingsResponse.json();
-        setBookings(bookingsJson);
+      fetch(`http://localhost:8085/utente/get/${username}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${isLoggedIn}`,
+        },
+      })
+        .then((response) => {
+          if (response.status === 404) {
+            throw new Error("Utente non trovato.");
+          }
+          if (!response.ok) {
+            throw new Error("Errore nel recupero dei dati.");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          setUserData(data);
+        })
+        .catch((err) => {
+          setError(err.message);
+        });
+    }
+  }, [isLoggedIn, navigate]);
+  const toggleInfoSection = () => {
+    setIsInfoVisible((prevState) => !prevState);
+  };
 
-        const ordersResponse = await fetch("/api/user/orders");
-        const ordersJson = await ordersResponse.json();
-        setOrders(ordersJson);
-      } catch (error) {
-        console.error("Errore durante il recupero dei dati:", error);
-      }
-    };
+  const togglePrenotazioniSection = () => {
+    setIsPrenotazioniVisible((prevState) => !prevState);
+  };
 
-    fetchData();
-  }, []);
+  const toggleOrdiniSection = () => {
+    setIsOrdiniVisible((prevState) => !prevState);
+  };
+
+  if (!isLoggedIn) {
+    return <p style={{ color: "yellow" }}>Informazioni non disponibili</p>;
+  }
+
+  if (error) {
+    return <p style={{ color: "yellow" }}>{error}</p>;
+  }
 
   return (
-    <div className="profilo-container">
-      <h1>
-        Bentornato sul tuo profilo, {userData?.nome} {userData?.cognome}
+    <div>
+      <h1 className="text-warning profilo-title">
+        Bentornato sul tuo profilo, {userData.nome}!
       </h1>
+      {userData ? (
+        <div className="profilo-container">
+          <h2
+            onClick={toggleInfoSection}
+            className="profilo-toggle text-warning"
+          >
+            {isInfoVisible
+              ? "Le tue informazioni personali"
+              : "Le tue informazioni personali"}{" "}
+            {isInfoVisible ? <CaretDownFill /> : <CaretRightFill />}
+          </h2>
 
-      <h2 className="profilo-title">Le tue informazioni personali</h2>
-      <div className="personal-info">
-        {userData ? (
-          <h5>
-            Nome: {userData.nome} <br />
-            Cognome: {userData.cognome} <br />
-            Username: {userData.username} <br />
-            Email: {userData.email} <br />
-            Password: ***** <br />
-            <button>Cambia password</button>
-          </h5>
-        ) : (
-          <p>Caricamento informazioni...</p>
-        )}
-      </div>
+          {isInfoVisible && (
+            <div className="personal-info">
+              <h5>
+                Nome: {userData.nome} <br />
+                Cognome: {userData.cognome} <br />
+                Username: {userData.username} <br />
+                Email: {userData.email} <br />
+                Password: ***** <br />
+              </h5>
+            </div>
+          )}
 
-      <h2 className="profilo-title">Le tue prenotazioni</h2>
-      {bookings.length > 0 ? (
-        bookings.map((booking) => (
-          <div key={booking.id}>
-            <h5>{booking.data}</h5>
-            <p>{booking.dettagli}</p>
-          </div>
-        ))
+          <h2
+            onClick={togglePrenotazioniSection}
+            className="profilo-toggle text-warning"
+          >
+            {isPrenotazioniVisible
+              ? "Le tue prenotazioni"
+              : "Le tue prenotazioni"}{" "}
+            {isPrenotazioniVisible ? <CaretDownFill /> : <CaretRightFill />}
+          </h2>
+
+          {isPrenotazioniVisible && (
+            <div className="prenotazioni-info">
+              <h5>Visualizza le tue prenotazioni qui.</h5>
+            </div>
+          )}
+
+          <h2
+            onClick={toggleOrdiniSection}
+            className="profilo-toggle text-warning"
+          >
+            {isOrdiniVisible ? "I tuoi ordini" : "I tuoi ordini"}{" "}
+            {isOrdiniVisible ? <CaretDownFill /> : <CaretRightFill />}
+          </h2>
+
+          {isOrdiniVisible && (
+            <div className="ordini-info">
+              <h5>Visualizza i tuoi ordini qui.</h5>
+            </div>
+          )}
+        </div>
       ) : (
-        <p>Non hai prenotazioni.</p>
-      )}
-
-      <h2 className="profilo-title">I tuoi ordini</h2>
-      {orders.length > 0 ? (
-        orders.map((order) => (
-          <div key={order.id}>
-            <h5>Data Ordine: {order.data}</h5>
-            <ul>
-              {order.prodotti.map((product, index) => (
-                <li key={index}>
-                  {product.nome} - {product.quantità} x €{product.prezzo}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))
-      ) : (
-        <p>Non hai ordini.</p>
+        <p>Caricamento informazioni...</p>
       )}
     </div>
   );

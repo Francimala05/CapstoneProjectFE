@@ -259,6 +259,19 @@ function Carrello() {
                       onChange={(e) => setOrarioRitiro(e.target.value)}
                     />
                   </Form.Group>
+
+                  <Form.Group
+                    controlId="formEsigenzeParticolari"
+                    className="mt-4"
+                  >
+                    <Form.Control
+                      as="textarea"
+                      rows={3}
+                      value={esigenzeParticolari}
+                      onChange={(e) => setEsigenzeParticolari(e.target.value)}
+                      placeholder="Inserisci eventuali esigenze particolari..."
+                    />
+                  </Form.Group>
                 </>
               )}
 
