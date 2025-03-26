@@ -30,7 +30,7 @@ function Register() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Accept: "text/plain",
+        Accept: "application/json",
       },
       body: JSON.stringify(newUser),
     })
@@ -45,21 +45,36 @@ function Register() {
         return response.text();
       })
       .then((data) => {
-        console.log("Dati ricevuti dal server:", data);
-        if (data.includes("è stato inserito correttamente nel sistema")) {
-          localStorage.setItem("authToken", data.token);
-          localStorage.setItem("username", data.username);
-          localStorage.setItem("userData", JSON.stringify(data.userData));
-          alert("Registrazione completata con successo!");
-          setNome("");
-          setCognome("");
-          setUsername("");
-          setEmail("");
-          setPassword("");
-          setConfirmPassword("");
-          navigate("/");
-        } else {
-          alert(data);
+        try {
+          const parsedData = JSON.parse(data);
+          console.log("Dati ricevuti dal server:", parsedData);
+
+          if (parsedData.message && parsedData.idUtente) {
+            console.log(
+              `L'utente ${parsedData.username} è stato registrato correttamente.`
+            );
+            console.log(`ID utente: ${parsedData.idUtente}`);
+            console.log(`Messaggio: ${parsedData.message}`);
+
+            localStorage.setItem("authToken", parsedData.token);
+            localStorage.setItem("username", parsedData.username);
+            localStorage.setItem("userData", JSON.stringify(parsedData));
+
+            alert("Registrazione completata con successo!");
+
+            setNome("");
+            setCognome("");
+            setUsername("");
+            setEmail("");
+            setPassword("");
+            setConfirmPassword("");
+            navigate("/");
+          } else {
+            alert("Errore nella registrazione: Dati mancanti.");
+          }
+        } catch (error) {
+          console.error("Errore nel parsing della risposta:", error);
+          alert("Errore durante il parsing dei dati.");
         }
       })
       .catch((error) => {

@@ -1,16 +1,19 @@
 import React, { useState } from "react";
-import { Form, Button, Container } from "react-bootstrap";
+import { Form, Button, Container, Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import "../assets/styles/Login.css";
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate(); // Per navigare dopo il login
 
   const handleLogin = (e) => {
     e.preventDefault();
-
+    setErrorMessage("");
+    setSuccessMessage("");
     const loginRequest = { username, password };
     // Iniziamo la richiesta di login
     fetch("http://localhost:8085/utente/login", {
@@ -42,26 +45,39 @@ function Login() {
                 "Errore: username non trovato nei dati del server."
               );
             }
-            alert("Login effettuato con successo!");
-            navigate("/");
+            if (parsedData.idUtente) {
+              console.log("Dati ricevuti dal server:", parsedData);
+              localStorage.setItem("idUtente", parsedData.idUtente);
+            } else {
+              console.error(
+                "Errore: idUtente non trovato nei dati del server."
+              );
+            }
+            setSuccessMessage("Login effettuato con successo!");
+            setTimeout(() => {
+              navigate("/");
+            }, 1000);
           } else {
-            alert("Credenziali non valide!");
+            setErrorMessage("Credenziali non valide!");
           }
         } catch (error) {
           console.error("Errore nel parsing della risposta:", error);
-          alert("Errore durante il parsing dei dati.");
+          setErrorMessage("Errore durante il parsing dei dati.");
         }
       })
 
-      .catch((error) => {
-        console.error("Errore durante il login:", error);
-        alert(`Errore durante il login: ${error.message}`);
+      .catch(() => {
+        setErrorMessage(`Credenziali non valide!`);
       });
   };
 
   return (
     <Container className="register-container">
       <h1 className="my-4 text-warning">Accedi</h1>
+
+      {successMessage && <Alert variant="success">{successMessage}</Alert>}
+      {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
+
       <Form onSubmit={handleLogin}>
         <Form.Group controlId="formUsername">
           <Form.Control

@@ -1,49 +1,98 @@
 .profilo-container {
   padding: 20px;
-}
-
-.profilo-toggle {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 40px;
-  text-align: left;
-  padding-top: 10px;
-  padding-bottom: 20px;
-  font-weight: bold;
-  cursor: pointer;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .profilo-title {
-  text-align: left;
+  text-align: center;
   font-size: 70px;
   margin-bottom: 20px;
   padding-left: 10px;
   margin-top: 20px;
 }
 
-.personal-info, .prenotazioni-info, .ordini-info {
-  margin-top: 20px;
-  padding: 20px;
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-
-
-h5 {
-  font-size: 1.2rem;
+.title-section {
+  font-size: 20px;
+  text-align: center;
 }
 
 .profilo-toggle {
   font-family: 'Montserrat', sans-serif;
-  font-size: 40px;
-  text-align: left;
+  font-size: 36px;
+  font-weight: bold;
+  cursor: pointer;
   padding-top: 10px;
   padding-bottom: 20px;
-  font-weight: bold;
+  text-align: center;
+  transition: color 0.3s ease;
 }
 
-.profilo-container .profilo-toggle {
-  font-size: 40px;
+.profilo-toggle:hover {
+  color: #ffcc00;
+}
 
+.personal-info, .prenotazioni-info, .ordini-info {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+h5 {
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
+
+h5 span {
+  font-weight: bold;
+  color: #ff9900;
+}
+
+.prenotazione-passata, .ordine-passato {
+  background-color: #f1f1f1;
+  color: #888;
+  text-decoration: line-through;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.prenotazione-futura, .ordine-futuro {
+  background-color: #ffffff;
+  color: #333;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.prenotazione-futura:hover, .ordine-futuro:hover {
+  background-color: #e3e3e3;
+  transform: scale(1.02);
+}
+
+.details {
+  display: none;
+  padding-top: 10px;
+  font-size: 0.95rem;
+  color: #555;
+  margin-top: 10px;
+  border-top: 2px solid #ccc;
+}
+
+.show-details .details {
+  display: block;
+}
+
+.show-details {
+  background-color: #e0f7fa;
+  border-left: 5px solid #00acc1;
 }
