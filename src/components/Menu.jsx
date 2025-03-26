@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../assets/styles/Menu.css";
-import { Card, Row, Col } from "react-bootstrap";
+import { Card, Row, Col, Spinner } from "react-bootstrap";
 import { CaretDownFill, CaretRightFill } from "react-bootstrap-icons";
 
 function Menu() {
@@ -80,7 +80,7 @@ function Menu() {
   };
 
   if (loading) {
-    return <div>Caricamento in corso...</div>;
+    return <Spinner animation="border" variant="warning" className="mt-3" />;
   }
 
   if (pizzas.length === 0 && panuozzi.length === 0) {

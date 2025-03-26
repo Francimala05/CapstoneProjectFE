@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "../assets/styles/Shop.css";
-import { Card, Row, Col, ToastContainer, Toast } from "react-bootstrap";
+import {
+  Card,
+  Row,
+  Col,
+  ToastContainer,
+  Toast,
+  Spinner,
+} from "react-bootstrap";
 import { CaretDownFill, CaretRightFill, CartFill } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
 
@@ -114,12 +121,12 @@ function Shop() {
       setShowToast(true);
 
       setTimeout(() => {
-        navigate("/login");
         window.scrollTo(0, 0);
+        navigate("/login");
       }, 1000);
     } else {
-      navigate("/carrello", { state: { cart } });
       window.scrollTo(0, 0);
+      navigate("/carrello", { state: { cart } });
     }
   };
 
@@ -143,7 +150,7 @@ function Shop() {
   };
 
   if (loading) {
-    return <div>Caricamento in corso...</div>;
+    return <Spinner animation="border" variant="warning" className="mt-3" />;
   }
 
   return (

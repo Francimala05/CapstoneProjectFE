@@ -4,15 +4,24 @@
   padding: 2rem;
   text-align: center;
 }
-footer {
+footer{
   background-color: black;
 }
 
 .custom-modal .modal-content {
-  background-color: #333;
-  color: white;
+  background-color: #333; 
+  color: white; 
 }
 
 body {
-  background-color: #343a40;
+  background-color: #25292c;
 }
+
+@media (max-width: 500px) {
+  body {
+    padding-top: 20%;
+  }
+
+}
+
+

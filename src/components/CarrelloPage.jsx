@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Form, ToastContainer, Toast } from "react-bootstrap";
+import { Button, Form, Alert } from "react-bootstrap";
 import { Trash3Fill } from "react-bootstrap-icons";
 import jwt_decode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
@@ -8,37 +8,36 @@ import "../assets/styles/CarrelloPage.css";
 function Carrello() {
   const [cart, setCart] = useState([]);
   const [totale, setTotale] = useState(0);
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
   const [dataRitiro, setDataRitiro] = useState("");
   const [orarioRitiro, setOrarioRitiro] = useState("");
   const [esigenzeParticolari, setEsigenzeParticolari] = useState("");
   const [telefono, setTelefono] = useState("");
   const [indirizzo, setIndirizzo] = useState("");
   const [deliveryMethod, setDeliveryMethod] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
     setCart(storedCart);
-
     const total = storedCart.reduce((acc, item) => acc + item.price, 0);
     setTotale(total);
   }, []);
 
+  useEffect(() => {
+    if (showAlert) {
+      console.log("Alert visibile:", alertMessage); // Log per vedere quando l'alert viene mostrato
+    }
+  }, [showAlert, alertMessage]);
+
   const handleCheckout = async () => {
     const token = localStorage.getItem("authToken");
-
     let totaleConSpedizione = totale;
-    if (deliveryMethod === "domicilio") {
-      totaleConSpedizione += 1;
-    }
 
-    setToastMessage("Ordine inviato con successo!");
-    setShowToast(true);
-    localStorage.removeItem("cart");
-    setCart([]);
-    navigate("/successorder", { state: { totaleConSpedizione } });
+    if (deliveryMethod === "domicilio") {
+      totaleConSpedizione += 1; // Aggiungi 1€ per la consegna
+    }
 
     if (!token) {
       alert("Token mancante, per favore effettua il login.");
@@ -67,8 +66,8 @@ function Carrello() {
       !orarioRitiro ||
       (deliveryMethod === "domicilio" && (!telefono || !indirizzo))
     ) {
-      setToastMessage("Per favore, completa tutti i campi necessari.");
-      setShowToast(true);
+      setAlertMessage("Per favore, completa tutti i campi necessari.");
+      setShowAlert(true);
       return;
     }
 
@@ -97,13 +96,11 @@ function Carrello() {
       indirizzo: indirizzo,
     };
 
-    console.log(ordine);
     const url =
       deliveryMethod === "asporto"
         ? "http://localhost:8085/api/ordini/asporto/invia"
         : "http://localhost:8085/api/ordini/domicilio/invia";
 
-    console.log("Inizio invio ordine");
     try {
       const response = await fetch(url, {
         method: "POST",
@@ -114,21 +111,20 @@ function Carrello() {
         body: JSON.stringify(ordine),
       });
 
-      const responseText = await response.text();
-
       if (!response.ok) {
-        console.error(
-          "Errore nell'invio dell'ordine. Status:",
-          response.status
-        );
-        setToastMessage(`Errore nell'invio dell'ordine: ${responseText}`);
-        setShowToast(true);
+        const responseText = await response.text();
+        setAlertMessage(`Errore nell'invio dell'ordine: ${responseText}`);
+        setShowAlert(true);
         return;
       }
+
+      localStorage.removeItem("cart");
+      setCart([]);
+      navigate("/successorder", { state: { totaleConSpedizione } });
     } catch (error) {
       console.error("Errore durante l'invio dell'ordine:", error);
-      setToastMessage("Errore durante l'invio dell'ordine. Riprova.");
-      setShowToast(true);
+      setAlertMessage("Errore durante l'invio dell'ordine. Riprova.");
+      setShowAlert(true);
     }
   };
 
@@ -145,34 +141,17 @@ function Carrello() {
     <div className="carrello-container">
       <h4 className="carrello-title">Il tuo Ordine</h4>
 
-      <ToastContainer
-        className="p-3"
-        style={{
-          position: "fixed",
-          bottom: "20px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          zIndex: 9999,
-        }}
-      >
-        <Toast
-          className={`bg-${
-            toastMessage.includes("Errore") ? "danger" : "light"
-          }`}
-          show={showToast}
-          onClose={() => setShowToast(false)}
-          delay={3000}
-          autohide
-        >
-          <Toast.Body>{toastMessage}</Toast.Body>
-        </Toast>
-      </ToastContainer>
+      {showAlert && (
+        <Alert variant="danger" onClose={() => setShowAlert(false)} dismissible>
+          {alertMessage}
+        </Alert>
+      )}
 
       <div className="carrello-items">
         {cart.length > 0 ? (
-          <div className="carrello-items">
+          <>
             {cart.map((item) => (
-              <div key={item.key} className="carrello-item">
+              <div key={item.id} className="carrello-item">
                 <div className="item-name">{item.name}</div>
                 <div className="item-price">€{item.price}</div>
                 <div className="item-remove">
@@ -187,7 +166,6 @@ function Carrello() {
             ))}
             <div className="total">
               <h3 className="total">
-                {" "}
                 Totale: €
                 {(deliveryMethod === "domicilio" ? totale + 1 : totale).toFixed(
                   2
@@ -202,7 +180,7 @@ function Carrello() {
                 Aggiungi prodotti
               </Button>
             </div>
-          </div>
+          </>
         ) : (
           <div className="carrello-empty">
             <p className="carrello-vuoto">Il carrello è vuoto.</p>
@@ -237,80 +215,44 @@ function Carrello() {
 
           {deliveryMethod && (
             <div className="domicilio-details">
-              {deliveryMethod === "asporto" && (
-                <>
-                  <h3>Data di ritiro</h3>
-                  <Form.Group controlId="formDataRitiro">
-                    <Form.Control
-                      type="date"
-                      value={dataRitiro}
-                      onChange={(e) => setDataRitiro(e.target.value)}
-                    />
-                  </Form.Group>
+              <h3>
+                {deliveryMethod === "asporto"
+                  ? "Data di ritiro"
+                  : "Data di consegna"}
+              </h3>
+              <Form.Group controlId="formDataRitiro">
+                <Form.Control
+                  type="date"
+                  value={dataRitiro}
+                  onChange={(e) => setDataRitiro(e.target.value)}
+                />
+              </Form.Group>
 
-                  <h3 className="mt-4">Orario di ritiro preferenziale</h3>
-                  <Form.Group
-                    controlId="formOrarioRitiro"
-                    className="pickup-time"
-                  >
-                    <Form.Control
-                      type="time"
-                      value={orarioRitiro}
-                      onChange={(e) => setOrarioRitiro(e.target.value)}
-                    />
-                  </Form.Group>
+              <h3 className="mt-4">
+                Orario{" "}
+                {deliveryMethod === "asporto" ? "di ritiro" : "di consegna"}{" "}
+                preferenziale
+              </h3>
+              <Form.Group controlId="formOrarioRitiro" className="pickup-time">
+                <Form.Control
+                  type="time"
+                  value={orarioRitiro}
+                  onChange={(e) => setOrarioRitiro(e.target.value)}
+                />
+              </Form.Group>
 
-                  <Form.Group
-                    controlId="formEsigenzeParticolari"
-                    className="mt-4"
-                  >
-                    <Form.Control
-                      as="textarea"
-                      rows={3}
-                      value={esigenzeParticolari}
-                      onChange={(e) => setEsigenzeParticolari(e.target.value)}
-                      placeholder="Inserisci eventuali esigenze particolari..."
-                    />
-                  </Form.Group>
-                </>
-              )}
+              <Form.Group controlId="formEsigenzeParticolari" className="mt-4">
+                <Form.Control
+                  as="textarea"
+                  rows={3}
+                  value={esigenzeParticolari}
+                  onChange={(e) => setEsigenzeParticolari(e.target.value)}
+                  placeholder="Inserisci eventuali esigenze particolari..."
+                />
+              </Form.Group>
 
               {deliveryMethod === "domicilio" && (
                 <>
-                  <h3>Data di consegna</h3>
-                  <Form.Group controlId="formDataRitiro">
-                    <Form.Control
-                      type="date"
-                      value={dataRitiro}
-                      onChange={(e) => setDataRitiro(e.target.value)}
-                    />
-                  </Form.Group>
-
-                  <h3 className="mt-4">Orario di consegna preferenziale</h3>
-                  <Form.Group
-                    controlId="formOrarioRitiro"
-                    className="pickup-time"
-                  >
-                    <Form.Control
-                      type="time"
-                      value={orarioRitiro}
-                      onChange={(e) => setOrarioRitiro(e.target.value)}
-                    />
-                  </Form.Group>
-
-                  <Form.Group
-                    controlId="formEsigenzeParticolari"
-                    className="mt-4"
-                  >
-                    <Form.Control
-                      as="textarea"
-                      rows={3}
-                      value={esigenzeParticolari}
-                      onChange={(e) => setEsigenzeParticolari(e.target.value)}
-                      placeholder="Inserisci eventuali esigenze particolari..."
-                    />
-                  </Form.Group>
-
                   <Form.Group controlId="formTelefono" className="mt-4">
                     <Form.Control
                       type="tel"

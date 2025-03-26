@@ -1,9 +1,8 @@
-import React from "react";
-
-import { useState } from "react";
-import { Form, Button, Container } from "react-bootstrap";
+import React, { useState } from "react";
+import { Form, Button, Container, Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import "../assets/styles/Login.css";
+
 function Register() {
   const [nome, setNome] = useState("");
   const [cognome, setCognome] = useState("");
@@ -11,21 +10,34 @@ function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate(); // Per navigare dopo la registrazione
 
   const handleRegister = (e) => {
     e.preventDefault();
+    setErrorMessage("");
+    setSuccessMessage("");
 
-    // Controllo che la password e la conferma siano uguali
-    if (password !== confirmPassword) {
-      alert("Le password non corrispondono!");
+    if (
+      !nome ||
+      !cognome ||
+      !username ||
+      !email ||
+      !password ||
+      !confirmPassword
+    ) {
+      setErrorMessage("Tutti i campi sono obbligatori!");
       return;
     }
 
-    // Creazione dell'oggetto utente da inviare al back-end
+    if (password !== confirmPassword) {
+      setErrorMessage("Le password non corrispondono!");
+      return;
+    }
+
     const newUser = { nome, cognome, username, email, password };
 
-    // Invio della richiesta al back-end per la registrazione
     fetch("http://localhost:8085/utente/insert", {
       method: "POST",
       headers: {
@@ -36,11 +48,19 @@ function Register() {
     })
       .then((response) => {
         console.log("Risposta dal server:", response);
-        // Se la risposta non è ok, mostra un errore
+
         if (!response.ok) {
-          throw new Error(
-            `Errore HTTP: ${response.status} ${response.statusText}`
-          );
+          return response.json().then((errorData) => {
+            if (errorData.error === "Username già esistente") {
+              setErrorMessage("Username già in uso.");
+            } else if (errorData.error === "Email già in uso") {
+              setErrorMessage("Email già in uso.");
+            } else {
+              setErrorMessage(
+                `Errore durante la registrazione: ${errorData.message}`
+              );
+            }
+          });
         }
         return response.text();
       })
@@ -58,9 +78,10 @@ function Register() {
 
             localStorage.setItem("authToken", parsedData.token);
             localStorage.setItem("username", parsedData.username);
+            localStorage.setItem("idUtente", parsedData.idUtente);
             localStorage.setItem("userData", JSON.stringify(parsedData));
 
-            alert("Registrazione completata con successo!");
+            setSuccessMessage("Registrazione completata con successo!");
 
             setNome("");
             setCognome("");
@@ -68,24 +89,32 @@ function Register() {
             setEmail("");
             setPassword("");
             setConfirmPassword("");
-            navigate("/");
+
+            setTimeout(() => {
+              navigate("/");
+            }, 500);
           } else {
-            alert("Errore nella registrazione: Dati mancanti.");
+            setErrorMessage("Errore nella registrazione: Dati mancanti.");
           }
         } catch (error) {
           console.error("Errore nel parsing della risposta:", error);
-          alert("Errore durante il parsing dei dati.");
+          setErrorMessage("Errore durante il parsing dei dati.");
         }
       })
       .catch((error) => {
         console.error("Errore durante la registrazione:", error);
-        alert(`Errore durante la registrazione: ${error.message}`);
+        setErrorMessage(`Username o Email già utilizzata`);
       });
   };
 
   return (
     <Container className="register-container">
       <h1 className="my-4 text-center text-warning">Registrati</h1>
+
+      {successMessage && <Alert variant="success">{successMessage}</Alert>}
+
+      {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
+
       <Form onSubmit={handleRegister}>
         <Form.Group controlId="formNome">
           <Form.Control
@@ -147,10 +176,11 @@ function Register() {
           />
         </Form.Group>
 
-        <Button variant="success" type="submit" className="mt-4  submit-button">
+        <Button variant="success" type="submit" className="mt-4 submit-button">
           Continua
         </Button>
       </Form>
+
       <p className="mt-5 text-warning">
         <Link as={Link} to="/login" className="link-text">
           Sei già registrato? Accedi qui!
@@ -159,4 +189,5 @@ function Register() {
     </Container>
   );
 }
+
 export default Register;

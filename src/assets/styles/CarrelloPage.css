@@ -188,3 +188,13 @@ h3 .pickup-time, h3 .domicilio-details {
   font-size: 20px;
   font-weight: bolder;
 }
+
+.alert {
+  position: absolute;
+  top: 20px; 
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  background-color: #f44336;
+  color: #ccc;
+}

@@ -198,7 +198,7 @@
 
   @media (max-width: 467px) {
     .text-section {
-      margin-top: 10px; 
+      margin-top: 50px; 
     }
 
     .home-page {
@@ -216,5 +216,11 @@
 
     .animated-image {
       max-width: 100%; 
+    }
+  }
+
+  @media (max-width: 376px) {
+    .aside-dx {
+      margin-top: 100px;
     }
   }
