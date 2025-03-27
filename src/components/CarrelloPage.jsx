@@ -27,7 +27,7 @@ function Carrello() {
 
   useEffect(() => {
     if (showAlert) {
-      console.log("Alert visibile:", alertMessage); // Log per vedere quando l'alert viene mostrato
+      console.log("Alert visibile:", alertMessage);
     }
   }, [showAlert, alertMessage]);
 
@@ -56,17 +56,30 @@ function Carrello() {
       }
     } catch (error) {
       console.error("Token invalido", error);
-      alert("Il tuo token non è valido. Effettua il login di nuovo.");
       navigate("/login");
       return;
     }
 
-    if (
-      !dataRitiro ||
-      !orarioRitiro ||
-      (deliveryMethod === "domicilio" && (!telefono || !indirizzo))
-    ) {
-      setAlertMessage("Per favore, completa tutti i campi necessari.");
+    let alertMessage = "";
+    if (!dataRitiro) {
+      alertMessage += "La data di ritiro/consegna è obbligatoria. ";
+    }
+    if (!orarioRitiro) {
+      alertMessage += "L'orario di ritiro/consegna è obbligatorio. ";
+    }
+    if (deliveryMethod === "domicilio" && (!telefono || !indirizzo)) {
+      if (!telefono) {
+        alertMessage +=
+          "Il numero di telefono è obbligatorio per la consegna a domicilio. ";
+      }
+      if (!indirizzo) {
+        alertMessage +=
+          "L'indirizzo è obbligatorio per la consegna a domicilio. ";
+      }
+    }
+
+    if (alertMessage) {
+      setAlertMessage(alertMessage);
       setShowAlert(true);
       return;
     }
@@ -263,7 +276,7 @@ function Carrello() {
                           setTelefono(value);
                         }
                       }}
-                      placeholder="Inserisci il tuo numero di telefono"
+                      placeholder="Telefono"
                     />
                   </Form.Group>
 
@@ -272,7 +285,7 @@ function Carrello() {
                       type="text"
                       value={indirizzo}
                       onChange={(e) => setIndirizzo(e.target.value)}
-                      placeholder="Inserisci l'indirizzo di consegna"
+                      placeholder="Indirizzo"
                     />
                   </Form.Group>
                 </>

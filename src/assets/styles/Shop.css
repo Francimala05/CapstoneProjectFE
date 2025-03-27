@@ -118,6 +118,7 @@ h4{
   .fritti-menu {
     background-color: #f9f9f9; 
     transform: scale(1.02);
+    margin-left: 5px;
   }
   
   .fritto-row1 .col:first-child {
@@ -142,10 +143,12 @@ h4{
   .bibite-menu {
     background-color: white;
     padding-left: 20px;
+    margin-left: 5px;
     padding-right: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin-top: 20px;
+    
 }
 
 .bibite-menu .bibita-row1 {
@@ -154,8 +157,7 @@ h4{
     padding: 15px 10px;
     border-bottom: 1px solid #ddd;
     font-size: 1.2rem;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
+    transition: background-color 0.3s ease, transform 0.3s ease; }
 
 .bibite-menu {
     background-color: #f9f9f9; 
@@ -217,4 +219,7 @@ h4{
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     z-index: 9999; 
+  }
+
+  @media (max-width: 500px) {
   }

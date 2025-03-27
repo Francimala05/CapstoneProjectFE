@@ -20,7 +20,11 @@ function NavBar() {
 
   return (
     <>
-      <Navbar expand="lg" className="bg-warning" expanded={expanded}>
+      <Navbar
+        expand="lg"
+        className={`bg-warning ${showModal ? "hidden" : ""}`} // Aggiungi la classe "hidden" quando il modale è visibile
+        expanded={expanded}
+      >
         <Container>
           <Navbar.Brand
             expand="lg"

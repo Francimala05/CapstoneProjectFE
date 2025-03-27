@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "../assets/styles/Profilo.css";
 import { CaretDownFill, CaretRightFill } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
+import { Spinner } from "react-bootstrap";
 
 function Profilo() {
   const [userData, setUserData] = useState(null);
@@ -156,9 +157,11 @@ function Profilo() {
   return (
     <div>
       <h1 className="text-warning profilo-title">
-        {userData
-          ? `Bentornato/a sul tuo profilo, ${userData.nome}!`
-          : "Caricamento..."}
+        {userData ? (
+          `Bentornato/a sul tuo profilo, ${userData.nome}!`
+        ) : (
+          <Spinner variant="warning" />
+        )}
       </h1>
       {userData ? (
         <div className="profilo-container">
