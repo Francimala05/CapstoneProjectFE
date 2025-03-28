@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../assets/styles/Menu.css";
-import { Card, Row, Col } from "react-bootstrap";
+import { Card, Row, Col, Spinner } from "react-bootstrap";
 import { CaretDownFill, CaretRightFill } from "react-bootstrap-icons";
 
 function Menu() {
@@ -80,7 +80,7 @@ function Menu() {
   };
 
   if (loading) {
-    return <div>Caricamento in corso...</div>;
+    return <Spinner animation="border" variant="warning" className="mt-3" />;
   }
 
   if (pizzas.length === 0 && panuozzi.length === 0) {
@@ -89,7 +89,7 @@ function Menu() {
 
   return (
     <div>
-      <h4 className="text-warning menu-title">Il nostro Menù</h4>
+      <h4 className="text-warning menu-title">Il nostro Menù!</h4>
       <h5 onClick={togglePizzaSection} className="menu-toggle text-warning">
         {isPizzaSectionVisible ? "Pizze" : "Pizze"}{" "}
         {isPizzaSectionVisible ? <CaretDownFill /> : <CaretRightFill />}
@@ -119,7 +119,7 @@ function Menu() {
                 </Card.Text>
                 <Row>
                   <Col className="pizza-price">
-                    <strong>Singola:</strong> €{pizza.price}
+                    <strong>Singola:</strong> <br />€{pizza.price}
                   </Col>
                   <Col className="pizza-price">
                     <strong>1/2 Kg:</strong> <br /> €{pizza.mezzoChiloPrice}

@@ -1,7 +1,7 @@
 import React from "react";
 import "../assets/styles/Sudinoi.css";
-import FotoStory from "../assets/PizzaPazzaStory1.jpg";
-import FotoFamily from "../assets/FotoFamily.jpg";
+import FotoStory from "../assets/images/PizzaPazzaStory1.jpg";
+import FotoFamily from "../assets/images/FotoFamily.jpg";
 function Sudinoi() {
   return (
     <>

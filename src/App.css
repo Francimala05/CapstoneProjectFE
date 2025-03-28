@@ -14,8 +14,14 @@ footer{
 }
 
 body {
-  background-color: #343a40;
+  background-color: #25292c;
 }
 
+@media (max-width: 500px) {
+  body {
+    padding-top: 20%;
+  }
+
+}
 
 

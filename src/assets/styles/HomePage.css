@@ -103,6 +103,7 @@
   }
   
   @media (max-width: 991px) {
+
     .content-container {
       flex-direction: column;
     }
@@ -180,7 +181,7 @@
 
       .home-page{
        align-items: baseline;
-       margin-bottom: 20px;
+       margin-bottom: 120px;
       }
       .text-section {
         margin-top: 10px; 
@@ -197,12 +198,11 @@
   }
 
   @media (max-width: 467px) {
-    .text-section {
-      margin-top: 10px; 
-    }
+  
 
     .home-page {
       height: 65vh;
+      margin-top: 25px;
     }
 
     .home-page  h4 {
@@ -217,4 +217,9 @@
     .animated-image {
       max-width: 100%; 
     }
+
+    .aside-dx{
+      margin-top: 0;
+    }
   }
+
