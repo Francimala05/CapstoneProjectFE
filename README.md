@@ -8,6 +8,9 @@ Benvenuto sul mio CapstoneProjectFE! 🎉 Questo è un progetto frontend di un'a
 2.  Installazione
 3.  Uso
 4.  Tecnologie utilizzate
+5. Collegamento link con la Repository BackEnd
+
+
 
 1. 📝 Descrizione
 
@@ -87,6 +90,12 @@ In questo progetto ho usato alcune tecnologie innovative e nuove:
 
     PgAdmin per testare le tabelle e per popolare il database ⭐
 
+
+5. ⚙️ Collegamento con la Repository Backend 
+
+Link repository BE
+
+ 📍 https://github.com/Francimala05/CapstoneProjectBE
 
     ✨ Conclusioni
 
