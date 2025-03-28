@@ -36,7 +36,7 @@ function Carrello() {
     let totaleConSpedizione = totale;
 
     if (deliveryMethod === "domicilio") {
-      totaleConSpedizione += 1; // Aggiungi 1€ per la consegna
+      totaleConSpedizione += 1; // Aggiunge 1€ per la consegna
     }
 
     if (!token) {

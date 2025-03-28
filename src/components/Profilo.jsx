@@ -81,7 +81,6 @@ function Profilo() {
 
     console.log("Chiamata API per ordini con ID utente:", userId);
 
-    // Fetch ordini asporto
     fetch(`http://localhost:8085/api/ordini/asporto/utente/${userId}`, {
       method: "GET",
       headers: { Authorization: `Bearer ${isLoggedIn}` },
@@ -90,7 +89,7 @@ function Profilo() {
         if (!response.ok) {
           if (response.status === 404) {
             console.log("Nessun ordine a asporto trovato per questo utente.");
-            return []; // Restituisci un array vuoto se 404
+            return [];
           }
           throw new Error(`Errore HTTP: ${response.status}`);
         }

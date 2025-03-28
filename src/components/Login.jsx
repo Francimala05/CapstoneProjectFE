@@ -8,14 +8,15 @@ function Login() {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const navigate = useNavigate(); // Per navigare dopo il login
+  const navigate = useNavigate();
 
   const handleLogin = (e) => {
     e.preventDefault();
     setErrorMessage("");
     setSuccessMessage("");
     const loginRequest = { username, password };
-    // Iniziamo la richiesta di login
+
+    // RICHIESTA LOGIN
     fetch("http://localhost:8085/utente/login", {
       method: "POST",
       headers: {

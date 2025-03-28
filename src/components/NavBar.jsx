@@ -22,7 +22,7 @@ function NavBar() {
     <>
       <Navbar
         expand="lg"
-        className={`bg-warning ${showModal ? "hidden" : ""}`} // Aggiungi la classe "hidden" quando il modale è visibile
+        className={`bg-warning ${showModal ? "hidden" : ""}`}
         expanded={expanded}
       >
         <Container>

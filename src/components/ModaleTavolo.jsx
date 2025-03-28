@@ -104,7 +104,7 @@ function PrenotaTavolo({ show, handleClose }) {
       altrePreferenze: preferenze || "",
     };
 
-    // Invio della prenotazione al server
+    // Invio Prenotazione
     fetch("http://localhost:8085/api/prenotazioni", {
       method: "POST",
       headers: {

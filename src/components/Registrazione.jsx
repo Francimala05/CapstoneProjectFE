@@ -12,7 +12,7 @@ function Register() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const navigate = useNavigate(); // Per navigare dopo la registrazione
+  const navigate = useNavigate();
 
   const handleRegister = (e) => {
     e.preventDefault();

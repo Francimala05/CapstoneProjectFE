@@ -338,7 +338,6 @@ function Shop() {
         </div>
       )}
 
-      {/* Fritti */}
       <h5
         onClick={() => toggleSection("fritti")}
         className="menu-toggle text-warning"
