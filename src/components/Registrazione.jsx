@@ -30,6 +30,14 @@ function Register() {
       setErrorMessage("Tutti i campi sono obbligatori!");
       return;
     }
+    if (username.length < 3 || username.length > 20) {
+      setErrorMessage("Il campo username deve contenere minimo 3 caratteri");
+      return;
+    }
+    if (password.length < 6 || password.length > 20) {
+      setErrorMessage("Il campo password deve contenere minimo 6 caratteri");
+      return;
+    }
 
     if (password !== confirmPassword) {
       setErrorMessage("Le password non corrispondono!");
@@ -77,6 +85,7 @@ function Register() {
             console.log(`Messaggio: ${parsedData.message}`);
 
             localStorage.setItem("authToken", parsedData.token);
+            console.log("Token ricevuto:", parsedData.token);
             localStorage.setItem("username", parsedData.username);
             localStorage.setItem("idUtente", parsedData.idUtente);
             localStorage.setItem("userData", JSON.stringify(parsedData));
