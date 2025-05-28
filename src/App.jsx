@@ -13,6 +13,7 @@ import Carrello from "./components/CarrelloPage";
 import SuccessOrder from "./components/SuccessOrder";
 import Profilo from "./components/Profilo";
 import ScrollToTop from "./components/ScrollToTop";
+import BackToTop from "./components/BackToTop";
 
 function App() {
   const location = useLocation();
@@ -39,6 +40,7 @@ function App() {
         <Route path="/successorder" element={<SuccessOrder />} />
         <Route path="/profilo" element={<Profilo />} />
       </Routes>
+      <BackToTop />
       {showFooter && <Footer />}
     </>
   );

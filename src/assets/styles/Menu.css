@@ -64,6 +64,7 @@
     text-align: left;
     font-size: 1rem;
     color: #555;
+     flex-grow: 1;
   }
   
   .pizza-menu, .panuozzo-menu {
@@ -191,3 +192,10 @@
     color: #f39c12; 
   }
 
+.pizza-card .card-body,
+.panuozzo-card .card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+}

@@ -28,6 +28,33 @@ function Shop() {
   const [toastType, setToastType] = useState("success");
   const navigate = useNavigate();
 
+  const getProductDetails = (id, type, formato) => {
+    let product = null;
+
+    switch (type) {
+      case "pizza":
+        product = pizzas.find((item) => item.id === id);
+        break;
+      case "panuozzo":
+        product = panuozzi.find((item) => item.id === id);
+        break;
+      case "fritto":
+        product = fritti.find((item) => item.id === id);
+        break;
+      case "bibita":
+        product = bibite.find((item) => item.id === id);
+        break;
+      default:
+        return null;
+    }
+
+    if (product) {
+      return { name: product.name, formato: formato || "N/D" };
+    } else {
+      return null;
+    }
+  };
+
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
     setCart(storedCart);
@@ -55,7 +82,6 @@ function Shop() {
         setPanuozzi(panuozzoData);
         setFritti(frittiData);
         setBibite(bibiteData);
-        logAllIds(pizzaData, panuozzoData, frittiData, bibiteData);
       } catch (error) {
         console.error("Errore nel recupero dei dati", error);
       } finally {
@@ -65,44 +91,30 @@ function Shop() {
 
     fetchData();
   }, []);
-  const logAllIds = (pizzas, panuozzi, fritti, bibite) => {
-    console.log("ID delle pizze:");
-    pizzas.forEach((pizza) => {
-      console.log(`Pizza ID: ${pizza.id}`);
-    });
 
-    console.log("ID dei panuozzi:");
-    panuozzi.forEach((panuozzo) => {
-      console.log(`Panuozzo ID: ${panuozzo.id}`);
-    });
-
-    console.log("ID dei fritti:");
-    fritti.forEach((fritto) => {
-      console.log(`Fritto ID: ${fritto.id}`);
-    });
-
-    console.log("ID delle bibite:");
-    bibite.forEach((bibita) => {
-      console.log(`Bibita ID: ${bibita.id}`);
-    });
-  };
   const addToCart = (item, type) => {
     const itemId = item.id;
 
-    if (!itemId) {
-      item.id = Date.now();
+    const productDetails = getProductDetails(itemId, type, item.formato);
+
+    if (!productDetails) {
+      console.error("Prodotto non trovato");
+      return;
     }
 
-    const formato = item.formato || "senza formato";
+    const { name, formato } = productDetails;
 
-    const uniqueKey = `${itemId}-${formato}`;
-
-    const itemWithKey = { ...item, type, key: uniqueKey, shopId: "SHOP" };
-
-    console.log("Aggiungo al carrello:", itemWithKey);
+    const itemWithDetails = {
+      ...item,
+      name: name,
+      formato: formato,
+      type,
+      key: `${itemId}-${formato}`,
+      shopId: "SHOP",
+    };
 
     setCart((prevCart) => {
-      const newCart = [...prevCart, itemWithKey];
+      const newCart = [...prevCart, itemWithDetails];
       localStorage.setItem("cart", JSON.stringify(newCart));
       return newCart;
     });
@@ -187,79 +199,59 @@ function Shop() {
       </h5>
       {isPizzaSectionVisible && (
         <div className="pizza-menu">
-          {pizzas.map((pizza) => (
-            <Card
-              key={`${pizza.id}-${pizza.formato || "singola"}`}
-              className="pizza-card"
-            >
-              <Card.Img
-                variant="top"
-                src={
-                  pizza.imageUrl ||
-                  "http://localhost:8085/images/1742217397019_Margherita.jpg"
-                }
-                alt={pizza.name}
-              />
+          {Object.entries(
+            pizzas.reduce((acc, item) => {
+              if (!acc[item.name]) {
+                acc[item.name] = {
+                  name: item.name,
+                  imageUrl: item.imageUrl,
+                  toppings: item.toppings,
+                  formati: {},
+                };
+              }
+              acc[item.name].formati[item.formato] = {
+                id: item.id,
+                price: item.price,
+              };
+              return acc;
+            }, {})
+          ).map(([key, value]) => (
+            <Card key={key} className="pizza-card">
+              <Card.Img variant="top" src={value.imageUrl} alt={value.name} />
               <Card.Body>
-                <Card.Title className="pizza-title">{pizza.name}</Card.Title>
+                <Card.Title className="pizza-title">{value.name}</Card.Title>
                 <Card.Text className="pizza-ingredients">
                   <strong>Ingredienti: </strong>
-                  {pizza.toppings
-                    ? pizza.toppings.join(", ")
-                    : "Ingredienti non disponibili"}
+                  {value.toppings ? value.toppings.join(", ") : "N/A"}
                 </Card.Text>
                 <Row>
-                  <Col
-                    className="pizza-price1"
-                    onClick={() =>
-                      addToCart(
-                        {
-                          id: pizza.id,
-                          name: pizza.name,
-                          price: pizza.price,
-                          formato: "singola",
-                        },
-                        "pizza"
-                      )
-                    }
-                    style={{ cursor: "pointer" }}
-                  >
-                    <strong>Singola:</strong> <br /> €{pizza.price}
-                  </Col>
-                  <Col
-                    className="pizza-price1"
-                    onClick={() =>
-                      addToCart(
-                        {
-                          id: pizza.id,
-                          name: pizza.name,
-                          price: pizza.mezzoChiloPrice,
-                          formato: "mezzo chilo",
-                        },
-                        "pizza"
-                      )
-                    }
-                    style={{ cursor: "pointer" }}
-                  >
-                    <strong>1/2 Kg:</strong> <br /> €{pizza.mezzoChiloPrice}
-                  </Col>
-                  <Col
-                    className="pizza-price1"
-                    onClick={() =>
-                      addToCart(
-                        {
-                          id: pizza.id,
-                          name: pizza.name,
-                          price: pizza.chiloPrice,
-                          formato: "chilo",
-                        },
-                        "pizza"
-                      )
-                    }
-                    style={{ cursor: "pointer" }}
-                  >
-                    <strong>1 Kg:</strong> <br /> €{pizza.chiloPrice}
-                  </Col>
+                  {Object.entries(value.formati)
+                    .sort(([formatoA], [formatoB]) => {
+                      const formatoOrder = { Singola: 0, "700g": 1, "1kg": 2 };
+                      const orderA = formatoOrder[formatoA] ?? 99;
+                      const orderB = formatoOrder[formatoB] ?? 99;
+                      return orderA - orderB;
+                    })
+                    .map(([formato, { id, price }]) => (
+                      <Col
+                        key={`${id}-${formato}`}
+                        className="pizza-price1"
+                        onClick={() =>
+                          addToCart(
+                            {
+                              id,
+                              name: value.name,
+                              price,
+                              formato,
+                            },
+                            "pizza"
+                          )
+                        }
+                        style={{ cursor: "pointer" }}
+                      >
+                        <strong>{formato}:</strong> <br />€{price}
+                      </Col>
+                    ))}
                 </Row>
               </Card.Body>
             </Card>
@@ -276,61 +268,74 @@ function Shop() {
       </h5>
       {isPanuozzoSectionVisible && (
         <div className="panuozzo-menu">
-          {panuozzi.map((panuozzo) => (
-            <Card
-              key={`${panuozzo.id}-${panuozzo.formato || "singolo"}`}
-              className="panuozzo-card"
-            >
-              <Card.Img
-                variant="top"
-                src={panuozzo.imageUrl}
-                alt={panuozzo.name}
-              />
+          {Object.entries(
+            panuozzi.reduce((acc, item) => {
+              if (!acc[item.name]) {
+                acc[item.name] = {
+                  name: item.name,
+                  imageUrl: item.imageUrl,
+                  toppings: item.toppings,
+                  formati: {},
+                };
+              }
+              acc[item.name].formati[item.formato] = {
+                id: item.id,
+                price: item.price,
+              };
+              return acc;
+            }, {})
+          ).map(([key, value]) => (
+            <Card key={key} className="panuozzo-card">
+              <Card.Img variant="top" src={value.imageUrl} alt={value.name} />
               <Card.Body>
-                <Card.Title className="panuozzo-title">
-                  {panuozzo.name}
-                </Card.Title>
+                <Card.Title className="panuozzo-title">{value.name}</Card.Title>
                 <Card.Text className="panuozzo-ingredients">
                   <strong>Ingredienti: </strong>
-                  {panuozzo.toppings
-                    ? panuozzo.toppings.join(", ")
+                  {value.toppings
+                    ? value.toppings.join(", ")
                     : "Ingredienti non disponibili"}
                 </Card.Text>
                 <Row>
-                  <Col
-                    className="panuozzo-price1"
-                    onClick={() =>
-                      addToCart(
-                        {
-                          id: panuozzo.id,
-                          name: panuozzo.name,
-                          price: panuozzo.mezzoPrice,
-                          formato: "singolo",
-                        },
-                        "panuozzo"
-                      )
-                    }
-                    style={{ cursor: "pointer" }}
-                  >
-                    <strong>Singolo:</strong> <br /> €{panuozzo.mezzoPrice}
-                  </Col>
-                  <Col
-                    className="panuozzo-price1"
-                    onClick={() =>
-                      addToCart(
-                        {
-                          id: panuozzo.id,
-                          name: panuozzo.name,
-                          price: panuozzo.interoPrice,
-                          formato: "intero",
-                        },
-                        "panuozzo"
-                      )
-                    }
-                    style={{ cursor: "pointer" }}
-                  >
-                    <strong>Intero:</strong> <br /> €{panuozzo.interoPrice}
-                  </Col>
+                  {value.formati["Singolo"] && (
+                    <Col
+                      className="panuozzo-price1"
+                      onClick={() =>
+                        addToCart(
+                          {
+                            id: value.formati["Singolo"].id,
+                            name: value.name,
+                            price: value.formati["Singolo"].price,
+                            formato: "Singolo",
+                          },
+                          "panuozzo"
+                        )
+                      }
+                      style={{ cursor: "pointer" }}
+                    >
+                      <strong>Singolo:</strong> <br />€
+                      {value.formati["Singolo"].price}
+                    </Col>
+                  )}
+                  {value.formati["Intero"] && (
+                    <Col
+                      className="panuozzo-price1"
+                      onClick={() =>
+                        addToCart(
+                          {
+                            id: value.formati["Intero"].id,
+                            name: value.name,
+                            price: value.formati["Intero"].price,
+                            formato: "Intero",
+                          },
+                          "panuozzo"
+                        )
+                      }
+                      style={{ cursor: "pointer" }}
+                    >
+                      <strong>Intero:</strong> <br />€
+                      {value.formati["Intero"].price}
+                    </Col>
+                  )}
                 </Row>
               </Card.Body>
             </Card>

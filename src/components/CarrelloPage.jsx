@@ -20,9 +20,11 @@ function Carrello() {
 
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+    console.log("Carrello recuperato dal localStorage:", storedCart);
     setCart(storedCart);
     const total = storedCart.reduce((acc, item) => acc + item.price, 0);
     setTotale(total);
+    console.log("Cart:", storedCart);
   }, []);
 
   useEffect(() => {
@@ -87,27 +89,38 @@ function Carrello() {
     const user = jwt_decode(token);
 
     const ordine = {
-      pizzeIds: cart
+      pizze: cart
         .filter((item) => item.type === "pizza")
-        .map((item) => item.id),
-      panuozziIds: cart
+        .map((item) => ({ id: item.id })),
+      panuozzi: cart
         .filter((item) => item.type === "panuozzo")
-        .map((item) => item.id),
-      frittiIds: cart
+        .map((item) => ({ id: item.id })),
+      fritti: cart
         .filter((item) => item.type === "fritto")
-        .map((item) => item.id),
-      bibiteIds: cart
+        .map((item) => ({ id: item.id })),
+      bibite: cart
         .filter((item) => item.type === "bibita")
-        .map((item) => item.id),
+        .map((item) => ({ id: item.id })),
       esigenzeParticolari:
         esigenzeParticolari || "Nessuna esigenza particolare",
       data: dataRitiro,
-      orario: orarioRitiro,
+      orario: orarioRitiro + ":00",
       username: user.sub,
       conto: totaleConSpedizione,
       telefono: telefono,
       indirizzo: indirizzo,
     };
+
+    console.log("Pizze:", ordine.pizze);
+    console.log("Panuozzi:", ordine.panuozzi);
+    console.log("Fritti:", ordine.fritti);
+    console.log("Bibite:", ordine.bibite);
+    console.log("Esigenze Particolari:", ordine.esigenzeParticolari);
+    console.log("Data:", ordine.data);
+    console.log("Orario:", ordine.orario);
+    console.log("Username:", ordine.username);
+    console.log("Telefono:", ordine.telefono);
+    console.log("Indirizzo:", ordine.indirizzo);
 
     const url =
       deliveryMethod === "asporto"
@@ -130,7 +143,7 @@ function Carrello() {
         setShowAlert(true);
         return;
       }
-
+      console.log("Ordine inviato con successo, risposta:", response);
       localStorage.removeItem("cart");
       setCart([]);
       navigate("/successorder", { state: { totaleConSpedizione } });
@@ -148,6 +161,8 @@ function Carrello() {
 
     const newTotale = updatedCart.reduce((acc, item) => acc + item.price, 0);
     setTotale(newTotale);
+
+    console.log("Carrello aggiornato dopo rimozione:", updatedCart);
   };
 
   return (

@@ -97,36 +97,42 @@ function Menu() {
 
       {isPizzaSectionVisible && (
         <div className="pizza-menu">
-          {pizzas.map((pizza) => (
-            <Card key={pizza.id} className="pizza-card">
-              <Card.Img
-                variant="top"
-                src={
-                  pizza.imageUrl
-                    ? pizza.imageUrl
-                    : "http://localhost:8085/images/1742217397019_Margherita.jpg"
-                }
-                alt={pizza.name}
-              />
-
+          {Object.entries(
+            pizzas.reduce((acc, item) => {
+              if (!acc[item.name]) {
+                acc[item.name] = {
+                  name: item.name,
+                  imageUrl: item.imageUrl,
+                  toppings: item.toppings,
+                  formati: {},
+                };
+              }
+              acc[item.name].formati[item.formato] = item.price;
+              return acc;
+            }, {})
+          ).map(([key, value]) => (
+            <Card key={key} className="pizza-card">
+              <Card.Img variant="top" src={value.imageUrl} alt={value.name} />
               <Card.Body>
-                <Card.Title className="pizza-title">{pizza.name}</Card.Title>
+                <Card.Title className="pizza-title">{value.name}</Card.Title>
                 <Card.Text className="pizza-ingredients">
                   <strong>Ingredienti: </strong>
-                  {pizza.toppings
-                    ? pizza.toppings.join(", ")
-                    : "Ingredienti non disponibili"}
+                  {value.toppings.join(", ")}
                 </Card.Text>
                 <Row>
-                  <Col className="pizza-price">
-                    <strong>Singola:</strong> <br />€{pizza.price}
-                  </Col>
-                  <Col className="pizza-price">
-                    <strong>1/2 Kg:</strong> <br /> €{pizza.mezzoChiloPrice}
-                  </Col>
-                  <Col className="pizza-price">
-                    <strong>1 Kg:</strong> <br /> €{pizza.chiloPrice}
-                  </Col>
+                  {Object.entries(value.formati)
+                    .sort(([formatoA], [formatoB]) => {
+                      const formatoOrder = { Singola: 0, "700g": 1, "1kg": 2 };
+                      const orderA = formatoOrder[formatoA] ?? 99;
+                      const orderB = formatoOrder[formatoB] ?? 99;
+                      return orderA - orderB;
+                    })
+                    .map(([formato, prezzo]) => (
+                      <Col key={formato} className="pizza-price">
+                        <strong>{formato}:</strong>
+                        <br />€{prezzo}
+                      </Col>
+                    ))}
                 </Row>
               </Card.Body>
             </Card>
@@ -140,30 +146,42 @@ function Menu() {
       </h5>
       {isPanuozzoSectionVisible && (
         <div className="panuozzo-menu">
-          {panuozzi.map((panuozzo) => (
-            <Card key={panuozzo.id} className="panuozzo-card">
-              <Card.Img
-                variant="top"
-                src={panuozzo.imageUrl}
-                alt={panuozzo.name}
-              />
+          {Object.entries(
+            panuozzi.reduce((acc, item) => {
+              if (!acc[item.name]) {
+                acc[item.name] = {
+                  name: item.name,
+                  imageUrl: item.imageUrl,
+                  toppings: item.toppings,
+                  formati: {},
+                };
+              }
+
+              acc[item.name].formati[item.formato] = item.price;
+              return acc;
+            }, {})
+          ).map(([key, value]) => (
+            <Card key={key} className="panuozzo-card">
+              <Card.Img variant="top" src={value.imageUrl} alt={value.name} />
               <Card.Body>
-                <Card.Title className="panuozzo-title">
-                  {panuozzo.name}
-                </Card.Title>
+                <Card.Title className="panuozzo-title">{value.name}</Card.Title>
                 <Card.Text className="panuozzo-ingredients">
                   <strong>Ingredienti: </strong>
-                  {panuozzo.toppings
-                    ? panuozzo.toppings.join(", ")
-                    : "Ingredienti non disponibili"}
+                  {value.toppings.join(", ")}
                 </Card.Text>
                 <Row>
-                  <Col className="panuozzo-price">
-                    <strong>Singolo:</strong> <br /> €{panuozzo.mezzoPrice}
-                  </Col>
-                  <Col className="panuozzo-price">
-                    <strong>Intero:</strong> <br /> €{panuozzo.interoPrice}
-                  </Col>
+                  {value.formati["Singolo"] && (
+                    <Col className="panuozzo-price">
+                      <strong>Singolo:</strong>
+                      <br />€{value.formati["Singolo"]}
+                    </Col>
+                  )}
+                  {value.formati["Intero"] && (
+                    <Col className="panuozzo-price">
+                      <strong>Intero:</strong>
+                      <br />€{value.formati["Intero"]}
+                    </Col>
+                  )}
                 </Row>
               </Card.Body>
             </Card>

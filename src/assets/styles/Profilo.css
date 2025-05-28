@@ -1,91 +1,118 @@
 .profilo-container {
-  padding: 20px;
-  max-width: 800px;
-  margin: 0 auto;
+  padding: 30px 20px;
+  max-width: 850px;
+  margin: 40px auto;
+  background: #1a1a1a; 
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .profilo-title {
   text-align: center;
-  font-size: 70px;
-  margin-bottom: 20px;
-  padding-left: 10px;
-  margin-top: 20px;
+  font-size: 48px;
+  font-weight: 900;
+  color: #ffc107; 
+  margin-bottom: 30px;
+  letter-spacing: 1.5px;
 }
 
 .title-section {
-  font-size: 20px;
+  font-size: 24px;
   text-align: center;
+  margin-bottom: 10px;
+  user-select: none;
 }
 
 .profilo-toggle {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 36px;
-  font-weight: bold;
+  font-size: 28px;
+  font-weight: 700;
   cursor: pointer;
-  padding-top: 10px;
-  padding-bottom: 20px;
+  padding: 12px 10px;
+  border-radius: 8px;
   text-align: center;
-  transition: color 0.3s ease;
+  background-color: #333;
+  color: #ffc107;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.25s ease, color 0.25s ease;
+  user-select: none;
+  margin-bottom: 10px;
 }
 
 .profilo-toggle:hover {
-  color: #ffcc00;
+  background-color: #ffcc00 !important; 
+  color: #555555 !important;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  border-radius: 6px;
 }
 
-.personal-info, .prenotazioni-info, .ordini-info {
-  margin-top: 20px;
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
-  text-align: left;
+.personal-info,
+.prenotazioni-info,
+.ordini-info {
+  margin-top: 10px;
+  padding: 25px 30px;
+  background-color: #262626;
+  border-radius: 12px;
+
+  margin-bottom: 25px;
+  line-height: 1.5;
+  font-size: 16px;
+  color: #eee;
 }
 
 h5 {
   font-size: 1.2rem;
   line-height: 1.6;
+  color: #ffd54f;
 }
 
 h5 span {
-  font-weight: bold;
-  color: #ff9900;
+  font-weight: 700;
+  color: #ffca28;
 }
 
-.prenotazione-passata, .ordine-passato {
-  background-color: #f1f1f1;
-  color: #888;
+.prenotazione-passata,
+.ordine-passato {
+  background-color: #3a3a3a;
+  color: #aaa;
   text-decoration: line-through;
-  padding: 15px;
-  margin: 10px 0;
-  border-radius: 8px;
-  cursor: pointer;
+  padding: 18px 22px;
+  margin: 14px 0;
+  border-radius: 10px;
+  cursor: default;
   transition: background-color 0.3s ease;
 }
 
-.prenotazione-futura, .ordine-futuro {
-  background-color: #ffffff;
-  color: #333;
-  padding: 15px;
-  margin: 10px 0;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.prenotazione-futura,
+.ordine-futuro {
+  background-color: #444;
+  color: #f0f0f0;
+  padding: 18px 22px;
+  margin: 14px 0;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(255, 193, 7, 0.2);
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-.prenotazione-futura:hover, .ordine-futuro:hover {
-  background-color: #e3e3e3;
+.prenotazione-futura:hover,
+.ordine-futuro:hover {
+  background-color: #555;
   transform: scale(1.02);
 }
 
 .details {
-  display: none;
-  padding-top: 10px;
-  font-size: 0.95rem;
-  color: #555;
-  margin-top: 10px;
-  border-top: 2px solid #ccc;
+  padding-top: 12px;
+  font-size: 0.9rem;
+  color: #ccc;
+  margin-top: 8px;
+  border-top: 1px solid #555;
+  padding-left: 15px;
 }
 
 .show-details .details {
@@ -93,6 +120,135 @@ h5 span {
 }
 
 .show-details {
-  background-color: #e0f7fa;
-  border-left: 5px solid #00acc1;
+  background-color: #263238;
+  border-left: 5px solid #ffb300;
 }
+
+h3 {
+  color: #ffca28;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+p {
+  margin: 5px 0;
+}
+
+.ordine-futuro h5,
+.ordine-passato h5 {
+  margin-top: 10px;
+  margin-bottom: 6px;
+  color: #ffb300;
+}
+
+
+.ordine-futuro,
+.ordine-passato {
+  background-color: #202020;
+  padding: 20px 25px;
+  margin: 16px 0;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.15);
+  position: relative;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  border-left: 6px solid #ffc107;
+}
+
+.ordine-futuro:hover,
+.ordine-passato:hover {
+  transform: translateY(-4px);
+  background-color: #2a2a2a;
+}
+
+.ordine-passato {
+  opacity: 0.7;
+  filter: grayscale(60%);
+  text-decoration: none;
+  border-left: 6px solid #888;
+}
+
+.ordine-futuro h4,
+.ordine-passato h4 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: #ffc107;
+}
+
+.ordine-futuro p,
+.ordine-passato p {
+  margin: 6px 0;
+  font-size: 15px;
+  color: #ddd;
+}
+
+.ordine-futuro .section-title,
+.ordine-passato .section-title {
+  font-weight: 700;
+  margin-top: 15px;
+  margin-bottom: 5px;
+  color: #ffca28;
+  border-bottom: 1px solid #444;
+  padding-bottom: 4px;
+}
+
+.ordine-futuro .ordine-type,
+.ordine-passato .ordine-type {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  background-color: #ffc107;
+  color: #222;
+  font-weight: 700;
+  font-size: 13px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  text-transform: uppercase;
+}
+
+.personal-info{
+    word-wrap: break-word; 
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+@media (max-width: 667px) {
+  .ordine-futuro .ordine-type,
+  .ordine-passato .ordine-type {
+    position: static;
+    display: inline-block;
+    margin-bottom: 8px;
+    margin-right: auto;
+  }
+
+  .ordine-futuro h4,
+  .ordine-passato h4 {
+    display: block;
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .profilo-container {
+    padding: 20px 15px;
+    max-width: 95%;
+  }
+  .profilo-title {
+    font-size: 36px;
+  }
+  .profilo-toggle {
+    font-size: 22px;
+  }
+  h3 {
+    font-size: 20px;
+  }
+
+  
+}
+
+.order-separator {
+  border: none;
+  border-top: 1px solid #666;
+  margin: 20px 0 10px 0;
+}
+
