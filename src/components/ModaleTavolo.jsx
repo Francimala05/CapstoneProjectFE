@@ -54,6 +54,13 @@ function PrenotaTavolo({ show, handleClose }) {
     }
   };
 
+  const formatDateLocal = (date) => {
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, "0");
+    const dd = String(date.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+  };
+
   const handlePrenotazione = (e) => {
     e.preventDefault();
     const authToken = localStorage.getItem("authToken");
@@ -98,13 +105,12 @@ function PrenotaTavolo({ show, handleClose }) {
 
     const dataPrenotazioneDTO = {
       username: username,
-      data: dataPrenotazione.toISOString().split("T")[0],
+      data: formatDateLocal(dataPrenotazione),
       orario: orario,
       numeroPersone: parseInt(numeroPersone, 10),
       altrePreferenze: preferenze || "",
     };
 
-    // Invio Prenotazione
     fetch("http://localhost:8085/api/prenotazioni", {
       method: "POST",
       headers: {
