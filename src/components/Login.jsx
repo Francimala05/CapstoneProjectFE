@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Form, Button, Container, Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import "../assets/styles/Login.css";
+import jwt_decode from "jwt-decode";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -38,6 +39,14 @@ function Login() {
           console.log("Dati ricevuti dal server:", parsedData);
           if (parsedData && parsedData.token) {
             localStorage.setItem("authToken", parsedData.token);
+            const decodedToken = jwt_decode(parsedData.token);
+            if (decodedToken.roles) {
+              console.log("Ruolo salvato:", localStorage.getItem("ruolo"));
+
+              localStorage.setItem("ruolo", decodedToken.roles);
+            } else {
+              console.warn("Ruolo non trovato nel token");
+            }
 
             if (parsedData.username) {
               localStorage.setItem("username", parsedData.username);

@@ -15,7 +15,8 @@ function Profilo() {
   const [isOrdiniVisible, setIsOrdiniVisible] = useState(false);
   const navigate = useNavigate();
   const isLoggedIn = localStorage.getItem("authToken");
-
+  const ruolo = localStorage.getItem("ruolo");
+  console.log("Ruolo attuale:", ruolo);
   useEffect(() => {
     const isLoggedIn = localStorage.getItem("authToken");
     if (!isLoggedIn) {
@@ -190,264 +191,276 @@ function Profilo() {
               </h5>
             </div>
           )}
+          {ruolo !== "PROPRIETARIO" && (
+            <>
+              <h2
+                onClick={toggleOrdiniSection}
+                className="profilo-toggle title-section text-warning"
+              >
+                {isOrdiniVisible ? "I tuoi ordini" : "I tuoi ordini"}{" "}
+                {isOrdiniVisible ? <CaretDownFill /> : <CaretRightFill />}
+              </h2>
 
-          <h2
-            onClick={toggleOrdiniSection}
-            className="profilo-toggle title-section text-warning"
-          >
-            {isOrdiniVisible ? "I tuoi ordini" : "I tuoi ordini"}{" "}
-            {isOrdiniVisible ? <CaretDownFill /> : <CaretRightFill />}
-          </h2>
+              {isOrdiniVisible && (
+                <div className="ordini-info">
+                  <h3>Ordini futuri:</h3>
+                  {futureOrdini.length > 0 ? (
+                    <div>
+                      {futureOrdini.map((ordine) => {
+                        return (
+                          <div
+                            key={ordine.idOrdine}
+                            className={
+                              isPast(ordine)
+                                ? "ordine-passato"
+                                : "ordine-futuro"
+                            }
+                          >
+                            <h4>
+                              Ordine per il {ordine.data} alle {ordine.orario}
+                            </h4>
+                            <div className="ordine-type">
+                              {ordine.indirizzo ? "Domicilio" : "Asporto"}
+                            </div>
 
-          {isOrdiniVisible && (
-            <div className="ordini-info">
-              <h3>Ordini futuri:</h3>
-              {futureOrdini.length > 0 ? (
-                <div>
-                  {futureOrdini.map((ordine) => {
-                    return (
-                      <div
-                        key={ordine.idOrdine}
-                        className={
-                          isPast(ordine) ? "ordine-passato" : "ordine-futuro"
-                        }
-                      >
-                        <h4>
-                          Ordine per il {ordine.data} alle {ordine.orario}
-                        </h4>
-                        <div className="ordine-type">
-                          {ordine.indirizzo ? "Domicilio" : "Asporto"}
-                        </div>
+                            {ordine.pizze?.length > 0 && (
+                              <div>
+                                <p className="section-title">Pizze</p>
+                                {ordine.pizze.map((p, i) => (
+                                  <p key={i}>
+                                    {p.name} - {p.formato || "n.d."} - {p.price}
+                                    €
+                                  </p>
+                                ))}
+                              </div>
+                            )}
 
-                        {ordine.pizze?.length > 0 && (
-                          <div>
-                            <p className="section-title">Pizze</p>
-                            {ordine.pizze.map((p, i) => (
-                              <p key={i}>
-                                {p.name} - {p.formato || "n.d."} - {p.price}€
+                            {ordine.panuozzi?.length > 0 && (
+                              <div>
+                                <p className="section-title">Panuozzi</p>
+                                {ordine.panuozzi.map((p, i) => (
+                                  <p key={i}>
+                                    {p.name} - {p.formato || "n.d."} - {p.price}
+                                    €
+                                  </p>
+                                ))}
+                              </div>
+                            )}
+
+                            {ordine.fritti?.length > 0 && (
+                              <div>
+                                <p className="section-title">Fritti</p>
+                                {ordine.fritti.map((f, i) => (
+                                  <p key={i}>
+                                    {f.name} - {f.price}€
+                                  </p>
+                                ))}
+                              </div>
+                            )}
+
+                            {ordine.bibite?.length > 0 && (
+                              <div>
+                                <p className="section-title">Bibite</p>
+                                {ordine.bibite.map((b, i) => (
+                                  <p key={i}>
+                                    {b.name} - {b.formato || "n.d."} - {b.price}
+                                    €
+                                  </p>
+                                ))}
+                              </div>
+                            )}
+                            <hr className="order-separator" />
+                            {ordine.esigenzeParticolari && (
+                              <p>
+                                <strong>Note:</strong>{" "}
+                                {ordine.esigenzeParticolari}
                               </p>
-                            ))}
-                          </div>
-                        )}
+                            )}
 
-                        {ordine.panuozzi?.length > 0 && (
-                          <div>
-                            <p className="section-title">Panuozzi</p>
-                            {ordine.panuozzi.map((p, i) => (
-                              <p key={i}>
-                                {p.name} - {p.formato || "n.d."} - {p.price}€
+                            {ordine.indirizzo && (
+                              <p>
+                                <strong>Indirizzo:</strong> {ordine.indirizzo}
                               </p>
-                            ))}
-                          </div>
-                        )}
-
-                        {ordine.fritti?.length > 0 && (
-                          <div>
-                            <p className="section-title">Fritti</p>
-                            {ordine.fritti.map((f, i) => (
-                              <p key={i}>
-                                {f.name} - {f.price}€
+                            )}
+                            {ordine.telefono && (
+                              <p>
+                                <strong>Telefono:</strong> {ordine.telefono}
                               </p>
-                            ))}
+                            )}
+                            <hr className="order-separator" />
+                            <p>
+                              <strong>Totale:</strong> {ordine.conto}€
+                            </p>
                           </div>
-                        )}
-
-                        {ordine.bibite?.length > 0 && (
-                          <div>
-                            <p className="section-title">Bibite</p>
-                            {ordine.bibite.map((b, i) => (
-                              <p key={i}>
-                                {b.name} - {b.formato || "n.d."} - {b.price}€
-                              </p>
-                            ))}
-                          </div>
-                        )}
-                        <hr className="order-separator" />
-                        {ordine.esigenzeParticolari && (
-                          <p>
-                            <strong>Note:</strong> {ordine.esigenzeParticolari}
-                          </p>
-                        )}
-
-                        {ordine.indirizzo && (
-                          <p>
-                            <strong>Indirizzo:</strong> {ordine.indirizzo}
-                          </p>
-                        )}
-                        {ordine.telefono && (
-                          <p>
-                            <strong>Telefono:</strong> {ordine.telefono}
-                          </p>
-                        )}
-                        <hr className="order-separator" />
-                        <p>
-                          <strong>Totale:</strong> {ordine.conto}€
-                        </p>
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : (
-                <p>Non hai ordini futuri.</p>
-              )}
-
-              <h3>Ordini passati:</h3>
-              {pastOrdini.length > 0 ? (
-                <div>
-                  {pastOrdini.map((ordine) => (
-                    <div
-                      key={ordine.idOrdine}
-                      className={
-                        isPast(ordine) ? "ordine-passato" : "ordine-futuro"
-                      }
-                    >
-                      <h4>
-                        Ordine del {ordine.data} alle {ordine.orario}
-                      </h4>
-                      <div className="ordine-type">
-                        {ordine.indirizzo ? "Domicilio" : "Asporto"}
-                      </div>
-
-                      {ordine.pizze?.length > 0 && (
-                        <div>
-                          <p className="section-title">Pizze</p>
-                          {ordine.pizze.map((p, i) => (
-                            <p key={i}>
-                              {p.name} - {p.formato || "n.d."} - {p.price}€
-                            </p>
-                          ))}
-                        </div>
-                      )}
-
-                      {ordine.panuozzi?.length > 0 && (
-                        <div>
-                          <p className="section-title">Panuozzi</p>
-                          {ordine.panuozzi.map((p, i) => (
-                            <p key={i}>
-                              {p.name} - {p.formato || "n.d."} - {p.price}€
-                            </p>
-                          ))}
-                        </div>
-                      )}
-
-                      {ordine.fritti?.length > 0 && (
-                        <div>
-                          <p className="section-title">Fritti</p>
-                          {ordine.fritti.map((f, i) => (
-                            <p key={i}>
-                              {f.name} - {f.price}€
-                            </p>
-                          ))}
-                        </div>
-                      )}
-
-                      {ordine.bibite?.length > 0 && (
-                        <div>
-                          <p className="section-title">Bibite</p>
-                          {ordine.bibite.map((b, i) => (
-                            <p key={i}>
-                              {b.name} - {b.formato || "n.d."} - {b.price}€
-                            </p>
-                          ))}
-                        </div>
-                      )}
-                      <hr className="order-separator" />
-                      {ordine.esigenzeParticolari && (
-                        <p>
-                          <strong>Note:</strong> {ordine.esigenzeParticolari}
-                        </p>
-                      )}
-
-                      {ordine.indirizzo && (
-                        <p>
-                          <strong>Indirizzo:</strong> {ordine.indirizzo}
-                        </p>
-                      )}
-                      {ordine.telefono && (
-                        <p>
-                          <strong>Telefono:</strong> {ordine.telefono}
-                        </p>
-                      )}
-                      <hr className="order-separator" />
-                      <p>
-                        <strong>Totale:</strong> {ordine.conto}€
-                      </p>
+                        );
+                      })}
                     </div>
-                  ))}
-                </div>
-              ) : (
-                <p>Non hai ordini passati.</p>
-              )}
-            </div>
-          )}
+                  ) : (
+                    <p>Non hai ordini futuri.</p>
+                  )}
 
-          <h2
-            onClick={togglePrenotazioniSection}
-            className="profilo-toggle title-section text-warning"
-          >
-            {isPrenotazioniVisible
-              ? "Le tue prenotazioni"
-              : "Le tue prenotazioni"}{" "}
-            {isPrenotazioniVisible ? <CaretDownFill /> : <CaretRightFill />}
-          </h2>
-          {isPrenotazioniVisible && (
-            <div className="prenotazioni-info">
-              <h3>Prenotazioni future:</h3>
-              {futurePrenotazioni.length > 0 ? (
-                <div>
-                  {futurePrenotazioni.map((prenotazione) => (
-                    <div
-                      key={prenotazione.idPrenotazione}
-                      className={
-                        isPast(prenotazione)
-                          ? "ordine-passato"
-                          : "ordine-futuro"
-                      }
-                    >
-                      <h4>
-                        Prenotazione per il {prenotazione.data} alle{" "}
-                        {prenotazione.orario}
-                      </h4>
-                      <p>Numero Persone: {prenotazione.numeroPersone}</p>
-                      <p>
-                        Preferenze:{" "}
-                        {prenotazione.altrePreferenze || "Nessuna preferenza"}
-                      </p>
+                  <h3>Ordini passati:</h3>
+                  {pastOrdini.length > 0 ? (
+                    <div>
+                      {pastOrdini.map((ordine) => (
+                        <div
+                          key={ordine.idOrdine}
+                          className={
+                            isPast(ordine) ? "ordine-passato" : "ordine-futuro"
+                          }
+                        >
+                          <h4>
+                            Ordine del {ordine.data} alle {ordine.orario}
+                          </h4>
+                          <div className="ordine-type">
+                            {ordine.indirizzo ? "Domicilio" : "Asporto"}
+                          </div>
+
+                          {ordine.pizze?.length > 0 && (
+                            <div>
+                              <p className="section-title">Pizze</p>
+                              {ordine.pizze.map((p, i) => (
+                                <p key={i}>
+                                  {p.name} - {p.formato || "n.d."} - {p.price}€
+                                </p>
+                              ))}
+                            </div>
+                          )}
+
+                          {ordine.panuozzi?.length > 0 && (
+                            <div>
+                              <p className="section-title">Panuozzi</p>
+                              {ordine.panuozzi.map((p, i) => (
+                                <p key={i}>
+                                  {p.name} - {p.formato || "n.d."} - {p.price}€
+                                </p>
+                              ))}
+                            </div>
+                          )}
+
+                          {ordine.fritti?.length > 0 && (
+                            <div>
+                              <p className="section-title">Fritti</p>
+                              {ordine.fritti.map((f, i) => (
+                                <p key={i}>
+                                  {f.name} - {f.price}€
+                                </p>
+                              ))}
+                            </div>
+                          )}
+
+                          {ordine.bibite?.length > 0 && (
+                            <div>
+                              <p className="section-title">Bibite</p>
+                              {ordine.bibite.map((b, i) => (
+                                <p key={i}>
+                                  {b.name} - {b.formato || "n.d."} - {b.price}€
+                                </p>
+                              ))}
+                            </div>
+                          )}
+                          <hr className="order-separator" />
+                          {ordine.esigenzeParticolari && (
+                            <p>
+                              <strong>Note:</strong>{" "}
+                              {ordine.esigenzeParticolari}
+                            </p>
+                          )}
+
+                          {ordine.indirizzo && (
+                            <p>
+                              <strong>Indirizzo:</strong> {ordine.indirizzo}
+                            </p>
+                          )}
+                          {ordine.telefono && (
+                            <p>
+                              <strong>Telefono:</strong> {ordine.telefono}
+                            </p>
+                          )}
+                          <hr className="order-separator" />
+                          <p>
+                            <strong>Totale:</strong> {ordine.conto}€
+                          </p>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  ) : (
+                    <p>Non hai ordini passati.</p>
+                  )}
                 </div>
-              ) : (
-                <p>Non hai prenotazioni future.</p>
               )}
 
-              <h3>Prenotazioni passate:</h3>
-              {pastPrenotazioni.length > 0 ? (
-                <div>
-                  {pastPrenotazioni.map((prenotazione) => (
-                    <div
-                      key={prenotazione.idPrenotazione}
-                      className={
-                        isPast(prenotazione)
-                          ? "ordine-passato"
-                          : "ordine-futuro"
-                      }
-                    >
-                      <h4>
-                        Prenotazione per il {prenotazione.data} alle{" "}
-                        {prenotazione.orario}
-                      </h4>
-                      <p>Numero Persone: {prenotazione.numeroPersone}</p>
-                      <p>
-                        Preferenze:{" "}
-                        {prenotazione.altrePreferenze || "Nessuna preferenza"}
-                      </p>
+              <h2
+                onClick={togglePrenotazioniSection}
+                className="profilo-toggle title-section text-warning"
+              >
+                {isPrenotazioniVisible
+                  ? "Le tue prenotazioni"
+                  : "Le tue prenotazioni"}{" "}
+                {isPrenotazioniVisible ? <CaretDownFill /> : <CaretRightFill />}
+              </h2>
+              {isPrenotazioniVisible && (
+                <div className="prenotazioni-info">
+                  <h3>Prenotazioni future:</h3>
+                  {futurePrenotazioni.length > 0 ? (
+                    <div>
+                      {futurePrenotazioni.map((prenotazione) => (
+                        <div
+                          key={prenotazione.idPrenotazione}
+                          className={
+                            isPast(prenotazione)
+                              ? "ordine-passato"
+                              : "ordine-futuro"
+                          }
+                        >
+                          <h4>
+                            Prenotazione per il {prenotazione.data} alle{" "}
+                            {prenotazione.orario}
+                          </h4>
+                          <p>Numero Persone: {prenotazione.numeroPersone}</p>
+                          <p>
+                            Preferenze:{" "}
+                            {prenotazione.altrePreferenze ||
+                              "Nessuna preferenza"}
+                          </p>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  ) : (
+                    <p>Non hai prenotazioni future.</p>
+                  )}
+
+                  <h3>Prenotazioni passate:</h3>
+                  {pastPrenotazioni.length > 0 ? (
+                    <div>
+                      {pastPrenotazioni.map((prenotazione) => (
+                        <div
+                          key={prenotazione.idPrenotazione}
+                          className={
+                            isPast(prenotazione)
+                              ? "ordine-passato"
+                              : "ordine-futuro"
+                          }
+                        >
+                          <h4>
+                            Prenotazione per il {prenotazione.data} alle{" "}
+                            {prenotazione.orario}
+                          </h4>
+                          <p>Numero Persone: {prenotazione.numeroPersone}</p>
+                          <p>
+                            Preferenze:{" "}
+                            {prenotazione.altrePreferenze ||
+                              "Nessuna preferenza"}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p>Non hai prenotazioni passate.</p>
+                  )}
                 </div>
-              ) : (
-                <p>Non hai prenotazioni passate.</p>
               )}
-            </div>
+            </>
           )}
         </div>
       ) : (

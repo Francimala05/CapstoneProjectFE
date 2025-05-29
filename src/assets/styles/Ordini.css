@@ -1,0 +1,112 @@
+.profilo-container {
+  padding: 30px 20px;
+  max-width: 850px;
+  margin: 40px auto;
+  background: #1a1a1a;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.calendar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 60px;
+}
+.react-calendar {
+  width: 320px;
+  background-color: #1a1a1a !important;
+  border: none !important;
+  color: #fff !important;
+  font-family: 'Montserrat', sans-serif;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.25);
+}
+
+
+.react-calendar__tile {
+  background: transparent !important;
+  color: #eee !important;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+
+.react-calendar__tile:hover:not(.react-calendar__tile--active) {
+  background-color: #444 !important;
+  color: #ffc107 !important;
+}
+
+
+.react-calendar__tile--active {
+  background-color: #ffc107 !important;
+  color: #000 !important;
+  border-radius: 8px !important;
+  font-weight: 700;
+  box-shadow: 0 0 8px #ffca28;
+}
+
+
+.react-calendar__tile--neighboringMonth {
+  color: #555 !important;
+}
+
+.react-calendar__month-view__weekdays {
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: #ffca28;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #444;
+}
+
+
+.react-calendar__month-view__days {
+  margin-top: 10px;
+}
+
+
+.react-calendar__navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  color: #ffc107;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.react-calendar__navigation button {
+  background: transparent;
+  border: none;
+  color: #ffc107;
+  cursor: pointer;
+  border-radius: 6px;
+  padding: 6px 10px;
+  transition: background-color 0.3s ease;
+}
+
+.react-calendar__navigation button:hover {
+  background-color: #ffca28;
+  color: #222;
+}
+
+.react-calendar__tile:focus {
+  outline: none;
+  box-shadow: 0 0 6px 2px #ffca28;
+}
+
+
+
+.ordini-info {
+  flex: 1 1 400px;
+  margin-top: 0;
+  padding: 25px 30px;
+  background-color: #262626;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.15);
+}

@@ -12,12 +12,19 @@ import PrenotaTavolo from "./ModaleTavolo";
 
 function NavBar() {
   const isLoggedIn = localStorage.getItem("authToken");
+  const ruolo = localStorage.getItem("ruolo");
   const [showModal, setShowModal] = useState(false);
   const [expanded, setExpanded] = useState(false);
 
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
-
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("username");
+    localStorage.removeItem("idUtente");
+    localStorage.removeItem("ruolo");
+    window.location.reload();
+  };
   return (
     <>
       <Navbar
@@ -26,10 +33,7 @@ function NavBar() {
         expanded={expanded}
       >
         <Container>
-          <Navbar.Brand
-            expand="lg"
-            className="d-flex justify-content-center justify-content-lg-start custom-navbar-brand"
-          >
+          <Navbar.Brand className="d-flex justify-content-center justify-content-lg-start custom-navbar-brand">
             <Link to="/" onClick={() => setExpanded(false)}>
               <img src={logo} alt="Logo" style={{ height: "90px" }} />
             </Link>
@@ -42,47 +46,86 @@ function NavBar() {
 
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="mx-auto custom-nav">
-              <Nav.Link
-                as={Link}
-                to="/"
-                className="mx-2"
-                onClick={() => setExpanded(false)}
-              >
-                Home
-              </Nav.Link>
-              <Nav.Link
-                as={Link}
-                to="/shop"
-                className="mx-2"
-                onClick={() => setExpanded(false)}
-              >
-                Ordina ora!
-              </Nav.Link>
-              <Nav.Link
-                as={Link}
-                to="/menù"
-                className="mx-2"
-                onClick={() => setExpanded(false)}
-              >
-                Menù
-              </Nav.Link>
-              <Nav.Link
-                onClick={() => {
-                  handleShow();
-                  setExpanded(false);
-                }}
-                className="mx-2"
-              >
-                Prenota un tavolo
-              </Nav.Link>
-              <Nav.Link
-                as={Link}
-                to="/sudinoi"
-                className="mx-2"
-                onClick={() => setExpanded(false)}
-              >
-                Su di noi
-              </Nav.Link>
+              {ruolo === "PROPRIETARIO" ? (
+                <>
+                  <Nav.Link
+                    className="me-3"
+                    as={Link}
+                    to="/"
+                    onClick={() => setExpanded(false)}
+                  >
+                    Home
+                  </Nav.Link>
+                  <Nav.Link
+                    className="me-3"
+                    as={Link}
+                    to="/ordini"
+                    onClick={() => setExpanded(false)}
+                  >
+                    Ordini
+                  </Nav.Link>
+                  <Nav.Link
+                    className="me-3"
+                    as={Link}
+                    to="/prenotazioni"
+                    onClick={() => setExpanded(false)}
+                  >
+                    Prenotazioni
+                  </Nav.Link>
+                  <Nav.Link
+                    className="me-3"
+                    as={Link}
+                    to="/gestione-menu"
+                    onClick={() => setExpanded(false)}
+                  >
+                    Gestione Menù
+                  </Nav.Link>
+                </>
+              ) : (
+                <>
+                  <Nav.Link
+                    className="me-3"
+                    as={Link}
+                    to="/"
+                    onClick={() => setExpanded(false)}
+                  >
+                    Home
+                  </Nav.Link>
+                  <Nav.Link
+                    className="me-3"
+                    as={Link}
+                    to="/shop"
+                    onClick={() => setExpanded(false)}
+                  >
+                    Ordina ora!
+                  </Nav.Link>
+                  <Nav.Link
+                    className="me-3"
+                    as={Link}
+                    to="/menù"
+                    onClick={() => setExpanded(false)}
+                  >
+                    Menù
+                  </Nav.Link>
+                  <Nav.Link
+                    className="me-3"
+                    onClick={() => {
+                      handleShow();
+                      setExpanded(false);
+                    }}
+                  >
+                    Prenota un tavolo
+                  </Nav.Link>
+                  <Nav.Link
+                    className="me-3"
+                    as={Link}
+                    to="/sudinoi"
+                    onClick={() => setExpanded(false)}
+                  >
+                    Su di noi
+                  </Nav.Link>
+                </>
+              )}
             </Nav>
 
             <Nav className="ms-auto mt-auto mx-2 me-lg-5">
@@ -103,11 +146,7 @@ function NavBar() {
                   <NavDropdown.Item
                     as={Button}
                     className="text-center bg-danger custom-logout-button"
-                    onClick={() => {
-                      localStorage.removeItem("authToken");
-                      localStorage.removeItem("userName");
-                      window.location.reload();
-                    }}
+                    onClick={handleLogout}
                   >
                     Logout
                   </NavDropdown.Item>
@@ -116,7 +155,6 @@ function NavBar() {
                 <Nav.Link
                   as={Link}
                   to="/login"
-                  className="mx-2"
                   onClick={() => setExpanded(false)}
                 >
                   Accedi

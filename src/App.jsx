@@ -14,6 +14,10 @@ import SuccessOrder from "./components/SuccessOrder";
 import Profilo from "./components/Profilo";
 import ScrollToTop from "./components/ScrollToTop";
 import BackToTop from "./components/BackToTop";
+import Ordini from "./components/Ordini";
+import Prenotazioni from "./components/Prenotazioni";
+import GestioneMenu from "./components/GestioneMenu";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   const location = useLocation();
@@ -33,12 +37,38 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/" element={<HomePage />} />
+        {/*UTENTE*/}
         <Route path="/shop" element={<Shop />} />
         <Route path="/menù" element={<Menu />} />
         <Route path="/sudinoi" element={<Sudinoi />} />
         <Route path="/carrello" element={<Carrello />} />
         <Route path="/successorder" element={<SuccessOrder />} />
         <Route path="/profilo" element={<Profilo />} />
+        {/*PROPRIETARIO*/}
+        <Route
+          path="/ordini"
+          element={
+            <ProtectedRoute requiredRole="PROPRIETARIO">
+              <Ordini />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/prenotazioni"
+          element={
+            <ProtectedRoute requiredRole="PROPRIETARIO">
+              <Prenotazioni />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/gestione-menu"
+          element={
+            <ProtectedRoute requiredRole="PROPRIETARIO">
+              <GestioneMenu />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
       <BackToTop />
       {showFooter && <Footer />}
